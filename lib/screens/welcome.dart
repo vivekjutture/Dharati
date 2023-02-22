@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:dharati/widgets/NavDrawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' as rootBundle;
+import 'package:snippet_coder_utils/FormHelper.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -11,6 +15,14 @@ class Welcome extends StatefulWidget {
 
 class _WelcomeState extends State<Welcome> {
   final user = FirebaseAuth.instance.currentUser!;
+  List<dynamic> dist = [];
+  String? distSel;
+  @override
+  void initState() {
+    createDistList();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,34 +41,36 @@ class _WelcomeState extends State<Welcome> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/Agriculture.jpg',
-              width: 200,
-              height: 200,
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              user.uid,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-              ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Text(
-              user.phoneNumber!,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-              ),
-            ),
+            FormHelper.dropDownWidget(
+              context,
+              "Select District",
+              this.distSel,
+              this.dist,
+              (onChanged) {
+                this.distSel = onChanged;
+                print("Selected District ${onChanged}");
+              },
+              (onValidate) {
+                return null;
+              },
+              borderColor: Theme.of(context).primaryColor,
+              borderFocusColor: Theme.of(context).primaryColor,
+              borderRadius: 10,
+              optionLabel: "label",
+              optionValue: "id",
+            )
           ],
         ),
       ),
     );
+  }
+
+  Future<void> createDistList() async {
+    final jsonData = await rootBundle.rootBundle
+        .loadString('assets/Districts.json');
+    List<dynamic> res = json.decode(jsonData) as List<dynamic>;
+    setState(() {
+      dist = res;
+    });
   }
 }
