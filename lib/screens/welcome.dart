@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import 'package:dharati/widgets/NavDrawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' as rootBundle;
+import 'package:flutter/services.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 
 class Welcome extends StatefulWidget {
@@ -66,9 +65,8 @@ class _WelcomeState extends State<Welcome> {
   }
 
   Future<void> createDistList() async {
-    final jsonData = await rootBundle.rootBundle
-        .loadString('assets/Districts.json');
-    List<dynamic> res = json.decode(jsonData) as List<dynamic>;
+    final jsonData = await rootBundle.loadString("assets/JSON Files/Districts.json");
+    List<dynamic> res = await json.decode(jsonData) as List<dynamic>;
     setState(() {
       dist = res;
     });
