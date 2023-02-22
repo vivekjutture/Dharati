@@ -46,7 +46,7 @@ class _DharatiAppState extends State<DharatiApp> {
   }
 
   checkLoginStatus() async {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    await FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null && mounted) {
         setState(() {
           DharatiApp.userLoggedIn = true;
