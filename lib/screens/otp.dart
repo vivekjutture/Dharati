@@ -106,7 +106,7 @@ class _OTPVerificationState extends State<OTPVerification> {
                         await FirebaseAuth.instance
                             .signInWithCredential(credential);
                         Navigator.pushNamedAndRemoveUntil(
-                            context, "welcome", (route) => false);
+                            context, "userDetails", (route) => false);
                       } on FirebaseAuthException catch (e) {
                         showSnackBar(context, e.message!);
                       }*/
@@ -114,7 +114,7 @@ class _OTPVerificationState extends State<OTPVerification> {
                           await FirebaseAllServices.instance.verifyOTP(otp);
                       if (isVerified) {
                         Navigator.pushNamedAndRemoveUntil(
-                            context, "/welcome", (route) => false);
+                            context, "/userDetails", (route) => false);
                       } else {
                         showSnackBar(context, "OTP failed");
                       }

@@ -1,5 +1,5 @@
 import 'package:dharati/services/FirebaseAllServices.dart';
-import 'package:dharati/screens/welcome.dart';
+import 'package:dharati/screens/userDetails.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dharati/screens/phone.dart';
@@ -36,11 +36,11 @@ class _DharatiAppState extends State<DharatiApp> {
     var controller = Get.put(FirebaseAllServices());
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DharatiApp.userLoggedIn ? const Welcome() : const PhoneNum(),
+      home: DharatiApp.userLoggedIn ? const UserDetails() : const PhoneNum(),
       routes: {
         '/phone': (context) => const PhoneNum(),
         '/otp': (context) => const OTPVerification(),
-        '/welcome': (context) => const Welcome(),
+        '/userDetails': (context) => const UserDetails(),
       },
     );
   }
