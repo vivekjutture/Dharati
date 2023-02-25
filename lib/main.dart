@@ -34,13 +34,13 @@ class _DharatiAppState extends State<DharatiApp> {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(FirebaseAllServices());
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: DharatiApp.userLoggedIn ? const UserDetails() : const PhoneNum(),
       routes: {
         '/phone': (context) => const PhoneNum(),
         '/otp': (context) => const OTPVerification(),
-        '/userDetails': (context) => const UserDetails(),
+        '/userdetails': (context) => const UserDetails(),
       },
     );
   }

@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dharati/services/FirebaseAllServices.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:dharati/widgets/showSnackBar.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 class UserDetails extends StatefulWidget {
   const UserDetails({super.key});
@@ -14,8 +16,8 @@ class UserDetails extends StatefulWidget {
 
 class _UserDetailsState extends State<UserDetails> {
   //variables
-  final user = FirebaseAuth.instance.currentUser!;
 
+  final user = FirebaseAuth.instance.currentUser!;
   final _formKey = GlobalKey<FormState>();
 
   final _acres = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -98,6 +100,7 @@ class _UserDetailsState extends State<UserDetails> {
   @override
   void initState() {
     createDistList();
+    getUserData();
     super.initState();
   }
 
@@ -120,8 +123,7 @@ class _UserDetailsState extends State<UserDetails> {
             padding: EdgeInsets.only(right: 15),
             onPressed: () async {
               await FirebaseAllServices.instance.logOut();
-              Navigator.pushNamedAndRemoveUntil(
-                  context, "/phone", (route) => false);
+              Get.offNamedUntil("/phone", (route) => false);
             },
             icon: Icon(
               Icons.logout,
@@ -571,10 +573,28 @@ class _UserDetailsState extends State<UserDetails> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        showSnackBar(context, "Processing Data");
+                        FirebaseAllServices.instance.addData(
+                            selectedAcre!,
+                            selectedGuntha!,
+                            selectedMainCrop!,
+                            selectedInternalCrop!,
+                            selectedInrrigationType!,
+                            selectedInrrigationSource!,
+                            selectedDistrict!,
+                            selectedTaluka!,
+                            selectedVillage!);
                       } else {
-                        showSnackBar(context,
-                            "Invalid Data\n\nAll Fields are Mandatory.");
+                        Get.snackbar(
+                          "Invalid Data",
+                          "All Fields are Mandatory",
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.red,
+                          isDismissible: true,
+                          dismissDirection: DismissDirection.horizontal,
+                          margin: EdgeInsets.all(15),
+                          forwardAnimationCurve: Curves.easeOutBack,
+                          colorText: Colors.white,
+                        );
                       }
                     },
                     child: Text(
@@ -599,11 +619,25 @@ class _UserDetailsState extends State<UserDetails> {
     );
   }
 
-  Future<void> createDistList() async {
+  createDistList() async {
+    /*final districtsURL =
+        "https://drive.google.com/file/d/1wzpZwy0gH1wfMn-SDihZ58tJqFrTk3CA/view?usp=share_link";
+    final talukasURL =
+        "https://drive.google.com/file/d/1PayUcxOF9cf1Z8JYibIG4fBGdkv9XGf4/view?usp=share_link";
+    final villagesURL =
+        "https://drive.google.com/file/d/1Cs0L6eKeUG2UNugQ1H_ARRtCT5e_PRKU/view?usp=share_link";
+    var jsonDistrictsData = await http.get(Uri.parse(districtsURL));
+    if (jsonDistrictsData.statusCode == 200) {
+      List<dynamic> districtsList =
+          json.decode(jsonDistrictsData.body).toList();
+      setState(() {
+        allDistricts = districtsList;
+      });
+    }*/
     final jsonDistrictsData =
         await rootBundle.loadString("assets/JSON Files/Districts.json");
     List<dynamic> districtsList =
-        await json.decode(jsonDistrictsData) as List<dynamic>;
+        json.decode(jsonDistrictsData) as List<dynamic>;
     setState(() {
       allDistricts = districtsList;
     });
@@ -621,5 +655,26 @@ class _UserDetailsState extends State<UserDetails> {
     setState(() {
       allVillages = villagesList;
     });
+  }
+
+  Future<void> getUserData() async {
+    var document = await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(user.uid)
+        .get();
+    if (document.exists) {
+      var data = document.data()!;
+      setState(() {
+        selectedAcre = data["Acre"];
+        selectedGuntha = data["Guntha"];
+        selectedMainCrop = data["Main Crop"];
+        selectedInternalCrop = data["Internal Crop"];
+        selectedInrrigationType = data["Irrigation Type"];
+        selectedInrrigationSource = data["Irrigation Source"];
+        selectedDistrict = data["District"];
+        selectedTaluka = data["Taluka"];
+        selectedVillage = data["Village"];
+      });
+    }
   }
 }

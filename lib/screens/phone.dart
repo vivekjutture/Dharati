@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
@@ -152,7 +153,17 @@ class _PhoneNumState extends State<PhoneNum> {
                           PhoneNum.completeNumber, context);
                       //Navigator.pushNamed(context, "/otp");
                     } else {
-                      showSnackBar(context, "Invalid Number");
+                      Get.snackbar(
+                        "Error",
+                        "Invalid Number",
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.red,
+                        isDismissible: true,
+                        dismissDirection: DismissDirection.horizontal,
+                        margin: EdgeInsets.all(15),
+                        forwardAnimationCurve: Curves.easeOutBack,
+                        colorText: Colors.white,
+                      );
                     }
                   },
                   child: Text(

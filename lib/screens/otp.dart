@@ -3,6 +3,7 @@ import 'package:dharati/services/FirebaseAllServices.dart';
 import 'package:dharati/widgets/showSnackBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 
 class OTPVerification extends StatefulWidget {
@@ -106,20 +107,39 @@ class _OTPVerificationState extends State<OTPVerification> {
                         await FirebaseAuth.instance
                             .signInWithCredential(credential);
                         Navigator.pushNamedAndRemoveUntil(
-                            context, "userDetails", (route) => false);
+                            context, "userdetails", (route) => false);
                       } on FirebaseAuthException catch (e) {
                         showSnackBar(context, e.message!);
                       }*/
                       var isVerified =
                           await FirebaseAllServices.instance.verifyOTP(otp);
                       if (isVerified) {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, "/userDetails", (route) => false);
+                        Get.offNamedUntil("/userdetails", (route) => false);
                       } else {
-                        showSnackBar(context, "OTP failed");
+                        Get.snackbar(
+                          "Error",
+                          "OTP Failed!",
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.red,
+                          isDismissible: true,
+                          dismissDirection: DismissDirection.horizontal,
+                          margin: EdgeInsets.all(15),
+                          forwardAnimationCurve: Curves.easeOutBack,
+                          colorText: Colors.white,
+                        );
                       }
                     } else {
-                      showSnackBar(context, "Invalid OTP");
+                      Get.snackbar(
+                        "Error",
+                        "Invalid OTP",
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.red,
+                        isDismissible: true,
+                        dismissDirection: DismissDirection.horizontal,
+                        margin: EdgeInsets.all(15),
+                        forwardAnimationCurve: Curves.easeOutBack,
+                        colorText: Colors.white,
+                      );
                     }
                   },
                   child: Text(
@@ -141,8 +161,7 @@ class _OTPVerificationState extends State<OTPVerification> {
               ),
               TextButton(
                   onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/phone', (route) => false);
+                    Get.offNamedUntil("/phone", (route) => false);
                   },
                   child: Text('Another number?')),
             ],
