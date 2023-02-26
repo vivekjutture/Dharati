@@ -19,12 +19,12 @@ void main() async {
 
 class DharatiApp extends StatefulWidget {
   const DharatiApp({super.key});
-  static bool userLoggedIn = false;
   @override
   State<DharatiApp> createState() => _DharatiAppState();
 }
 
 class _DharatiAppState extends State<DharatiApp> {
+  bool userLoggedIn = false;
   @override
   void initState() {
     checkLoginStatus();
@@ -36,7 +36,7 @@ class _DharatiAppState extends State<DharatiApp> {
     var controller = Get.put(FirebaseAllServices());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DharatiApp.userLoggedIn ? const UserDetails() : const PhoneNum(),
+      home: userLoggedIn ? const UserDetails() : const PhoneNum(),
       routes: {
         '/phone': (context) => const PhoneNum(),
         '/otp': (context) => const OTPVerification(),
@@ -49,11 +49,11 @@ class _DharatiAppState extends State<DharatiApp> {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null && mounted) {
         setState(() {
-          DharatiApp.userLoggedIn = true;
+          userLoggedIn = true;
         });
       } else {
         setState(() {
-          DharatiApp.userLoggedIn = false;
+          userLoggedIn = false;
         });
       }
     });
