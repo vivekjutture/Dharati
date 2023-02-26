@@ -1,7 +1,4 @@
 import 'package:dharati/services/FirebaseAllServices.dart';
-import 'package:dharati/widgets/showSnackBar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -10,8 +7,9 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 
 class PhoneNum extends StatefulWidget {
   const PhoneNum({super.key});
-  static String verifyId = "";
+  //static String verifyId = "";
   static String completeNumber = '#';
+  
 
   @override
   State<PhoneNum> createState() => _PhoneNumState();
@@ -24,6 +22,7 @@ class _PhoneNumState extends State<PhoneNum> {
   int minLength = 10;
   int maxLength = 10;
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,8 +33,7 @@ class _PhoneNumState extends State<PhoneNum> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/Agriculture.jpg',
+              Image.asset('assets/Agriculture.jpg',
                 width: 200,
                 height: 200,
               ),
@@ -149,8 +147,8 @@ class _PhoneNumState extends State<PhoneNum> {
                       } catch (e) {
                         showSnackBar(context, "OTP Faild");
                       }*/
-                      FirebaseAllServices.instance.phoneAuthentication(
-                          PhoneNum.completeNumber, context);
+                      FirebaseAllServices.instance
+                          .phoneAuthentication(PhoneNum.completeNumber);
                       //Navigator.pushNamed(context, "/otp");
                     } else {
                       Get.snackbar(

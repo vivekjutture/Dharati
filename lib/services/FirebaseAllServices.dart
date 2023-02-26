@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+ 
 class FirebaseAllServices extends GetxController {
   static FirebaseAllServices get instance => Get.find();
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -10,7 +10,7 @@ class FirebaseAllServices extends GetxController {
   var verifyId = ''.obs;
 
   Future<void> phoneAuthentication(
-      String phoneNum, BuildContext context) async {
+      String phoneNum) async {
     try {
       await _auth.verifyPhoneNumber(
         phoneNumber: phoneNum,

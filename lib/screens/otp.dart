@@ -1,6 +1,5 @@
 import 'package:dharati/screens/phone.dart';
 import 'package:dharati/services/FirebaseAllServices.dart';
-import 'package:dharati/widgets/showSnackBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -40,8 +39,7 @@ class _OTPVerificationState extends State<OTPVerification> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/Agriculture.jpg',
+              Image.asset('assets/Agriculture.jpg',
                 width: 200,
                 height: 200,
               ),
