@@ -4,9 +4,9 @@ A new Flutter project.
 
 Project members:
 
--- Vivek Utture
+- Vivek Utture
 
--- Shivani Shirale
+- Shivani Shirale
 
--- Apurva Patil
+- Apurva Patil
 
