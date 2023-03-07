@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dharati/main.dart';
 import 'package:dharati/services/FirebaseAllServices.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 class UserDetails extends StatefulWidget {
   const UserDetails({super.key});
@@ -101,7 +103,6 @@ class _UserDetailsState extends State<UserDetails> {
 
   @override
   void initState() {
-    loading = true;
     createDistList();
     getUserData();
     super.initState();
@@ -291,6 +292,8 @@ class _UserDetailsState extends State<UserDetails> {
                           ),
                           borderRadius: BorderRadius.circular(10),
                           menuMaxHeight: 250,
+                          isExpanded: true,
+                          isDense: true,
                           hint: Text("Select Main Crop"),
                           value: selectedMainCrop,
                           items: mainCrops
@@ -333,6 +336,8 @@ class _UserDetailsState extends State<UserDetails> {
                           ),
                           borderRadius: BorderRadius.circular(10),
                           menuMaxHeight: 250,
+                          isExpanded: true,
+                          isDense: true,
                           hint: Text("Select Internal Crop"),
                           value: selectedInternalCrop,
                           items: internalCrops
@@ -376,6 +381,8 @@ class _UserDetailsState extends State<UserDetails> {
                           ),
                           borderRadius: BorderRadius.circular(10),
                           menuMaxHeight: 250,
+                          isExpanded: true,
+                          isDense: true,
                           hint: Text("Select Irrigation Type"),
                           value: selectedInrrigationType,
                           items: irrigationTypes
@@ -419,6 +426,8 @@ class _UserDetailsState extends State<UserDetails> {
                           ),
                           borderRadius: BorderRadius.circular(10),
                           menuMaxHeight: 250,
+                          isExpanded: true,
+                          isDense: true,
                           hint: Text("Select Irrigation Source"),
                           value: selectedInrrigationSource,
                           items: irrigationSources
@@ -462,6 +471,8 @@ class _UserDetailsState extends State<UserDetails> {
                           ),
                           borderRadius: BorderRadius.circular(10),
                           menuMaxHeight: 250,
+                          isExpanded: true,
+                          isDense: true,
                           hint: Text("Select District"),
                           value: selectedDistrict,
                           items: allDistricts
@@ -509,6 +520,8 @@ class _UserDetailsState extends State<UserDetails> {
                           ),
                           borderRadius: BorderRadius.circular(10),
                           menuMaxHeight: 250,
+                          isExpanded: true,
+                          isDense: true,
                           hint: Text("Select Taluka"),
                           value: selectedTaluka,
                           items: availableTalukas
@@ -554,6 +567,8 @@ class _UserDetailsState extends State<UserDetails> {
                           ),
                           borderRadius: BorderRadius.circular(10),
                           menuMaxHeight: 250,
+                          isExpanded: true,
+                          isDense: true,
                           hint: Text("Select Village"),
                           value: selectedVillage,
                           items: availableVillages
@@ -627,7 +642,24 @@ class _UserDetailsState extends State<UserDetails> {
   }
 
   Future<void> createDistList() async {
-
+    /*final districtsURL = "https://jsonkeeper.com/b/Y44B";
+    final talukasURL =
+        "https://drive.google.com/file/d/1PayUcxOF9cf1Z8JYibIG4fBGdkv9XGf4/view?usp=share_link";
+    final villagesURL =
+        "https://drive.google.com/file/d/1Cs0L6eKeUG2UNugQ1H_ARRtCT5e_PRKU/view?usp=share_link";*/
+    /*try {
+      var jsonDistrictsData = await http.get(Uri.parse(districtsURL));
+      if (jsonDistrictsData.statusCode == 200) {
+        List<dynamic> districtsList =
+            await json.decode(jsonDistrictsData.body) as List<dynamic>;
+        setState(() {
+          allDistricts = districtsList;
+        });
+        print("okay");
+      }
+    } catch (e) {
+      print(e.toString());
+    }*/
     final jsonDistrictsData =
         await rootBundle.loadString("assets/JSON Files/Districts.json");
     List<dynamic> districtsList =
@@ -665,6 +697,11 @@ class _UserDetailsState extends State<UserDetails> {
           .where((element) => element["parentId"] == taluka)
           .toList();
     });
+    Future.delayed(Duration(seconds: 3), () {
+        setState(() {
+          loading = false;
+        });
+      });
   }
 
   Future<void> getUserData() async {
@@ -687,11 +724,12 @@ class _UserDetailsState extends State<UserDetails> {
         fetchTalukas(selectedDistrict);
         fetchVillages(selectedTaluka);
       });
-      Future.delayed(Duration(seconds: 5), () {
+        Future.delayed(Duration(seconds: 5), () {
         setState(() {
           loading = false;
         });
       });
+      
     } else {
       setState(() {
         loading = false;
