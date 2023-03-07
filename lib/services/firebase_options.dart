@@ -67,6 +67,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1051211273003',
     projectId: 'dharati-63d5e',
     storageBucket: 'dharati-63d5e.appspot.com',
+    androidClientId: '1051211273003-9jt6n6uv5repbcrfu5a1ib5i2fec13tb.apps.googleusercontent.com',
     iosClientId: '1051211273003-osb6spd2vevpd81icve5qfto4ppj9qc3.apps.googleusercontent.com',
     iosBundleId: 'com.example.dharati',
   );
@@ -77,6 +78,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1051211273003',
     projectId: 'dharati-63d5e',
     storageBucket: 'dharati-63d5e.appspot.com',
+    androidClientId: '1051211273003-9jt6n6uv5repbcrfu5a1ib5i2fec13tb.apps.googleusercontent.com',
     iosClientId: '1051211273003-osb6spd2vevpd81icve5qfto4ppj9qc3.apps.googleusercontent.com',
     iosBundleId: 'com.example.dharati',
   );
