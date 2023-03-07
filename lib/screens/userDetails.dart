@@ -697,11 +697,6 @@ class _UserDetailsState extends State<UserDetails> {
           .where((element) => element["parentId"] == taluka)
           .toList();
     });
-    Future.delayed(Duration(seconds: 3), () {
-        setState(() {
-          loading = false;
-        });
-      });
   }
 
   Future<void> getUserData() async {
@@ -724,7 +719,7 @@ class _UserDetailsState extends State<UserDetails> {
         fetchTalukas(selectedDistrict);
         fetchVillages(selectedTaluka);
       });
-        Future.delayed(Duration(seconds: 5), () {
+        Future.delayed(Duration(seconds: 7), () {
         setState(() {
           loading = false;
         });
