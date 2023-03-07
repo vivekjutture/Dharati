@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dharati/main.dart';
+import 'package:dharati/screens/dosageCalculator.dart';
 import 'package:dharati/services/FirebaseAllServices.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -605,6 +606,12 @@ class _UserDetailsState extends State<UserDetails> {
                                   selectedDistrict!,
                                   selectedTaluka!,
                                   selectedVillage!);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const DosageCalculator()),
+                              );
                             } else {
                               Get.snackbar(
                                 "Invalid Data",
@@ -719,12 +726,11 @@ class _UserDetailsState extends State<UserDetails> {
         fetchTalukas(selectedDistrict);
         fetchVillages(selectedTaluka);
       });
-        Future.delayed(Duration(seconds: 7), () {
+      Future.delayed(Duration(seconds: 7), () {
         setState(() {
           loading = false;
         });
       });
-      
     } else {
       setState(() {
         loading = false;
