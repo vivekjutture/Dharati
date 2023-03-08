@@ -36,14 +36,13 @@ class _DharatiAppState extends State<DharatiApp> {
   bool isAlertSet = false;
   @override
   void initState() {
-    getConnectivity();
+    //getConnectivity();
     checkLoginStatus();
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     subscription.cancel();
     super.dispose();
   }
@@ -77,7 +76,7 @@ class _DharatiAppState extends State<DharatiApp> {
     });
   }
 
-  getConnectivity()  =>
+  /*getConnectivity()  =>
       subscription = Connectivity().onConnectivityChanged.listen(
         (ConnectivityResult result) async {
           isDeviceConnected = await InternetConnectionChecker().hasConnection;
@@ -108,5 +107,5 @@ class _DharatiAppState extends State<DharatiApp> {
             ),
           ],
         ),
-      );
+      );*/
 }
