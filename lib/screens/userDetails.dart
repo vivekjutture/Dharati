@@ -123,19 +123,6 @@ class _UserDetailsState extends State<UserDetails> {
             color: Colors.white,
           ),
         ),
-        actions: [
-          IconButton(
-            padding: EdgeInsets.only(right: 15),
-            onPressed: () async {
-              await FirebaseAllServices.instance.logOut();
-              Get.offNamedUntil("/phone", (route) => false);
-            },
-            icon: Icon(
-              Icons.logout,
-              color: Colors.white,
-            ),
-          ),
-        ],
         centerTitle: true,
         backgroundColor: Colors.green,
       ),
@@ -606,12 +593,6 @@ class _UserDetailsState extends State<UserDetails> {
                                   selectedDistrict!,
                                   selectedTaluka!,
                                   selectedVillage!);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const DosageCalculator()),
-                              );
                             } else {
                               Get.snackbar(
                                 "Invalid Data",

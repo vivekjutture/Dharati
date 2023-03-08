@@ -2,15 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
- 
+
 class FirebaseAllServices extends GetxController {
   static FirebaseAllServices get instance => Get.find();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   var verifyId = ''.obs;
 
-  Future<void> phoneAuthentication(
-      String phoneNum) async {
+  Future<void> phoneAuthentication(String phoneNum) async {
     try {
       await _auth.verifyPhoneNumber(
         phoneNumber: phoneNum,
@@ -139,45 +138,49 @@ class FirebaseAllServices extends GetxController {
     final user = _auth.currentUser!;
     final id = user.uid;
     final phoneNo = user.phoneNumber;
-    await FirebaseFirestore.instance
-        .collection("Users")
-        .doc(id)
-        .set(
-          {
-            "ID": id,
-            "Phone Number": phoneNo,
-            "Acre": acre,
-            "Guntha": guntha,
-            "Main Crop": mainCrop,
-            "Internal Crop": internalCrop,
-            "Irrigation Type": irrigationType,
-            "Irrigation Source": irrigationSource,
-            "District": district,
-            "Taluka": taluka,
-            "Village": village,
-          },
-        )
-        .then((value) => Get.snackbar(
-              "Sucess",
-              "Data Uploaded Successfully!",
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: Colors.green,
-              isDismissible: true,
-              dismissDirection: DismissDirection.horizontal,
-              margin: EdgeInsets.all(15),
-              forwardAnimationCurve: Curves.easeOutBack,
-              colorText: Colors.white,
-            ))
-        .onError((error, stackTrace) => Get.snackbar(
-              "Error",
-              error.toString(),
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: Colors.red,
-              isDismissible: true,
-              dismissDirection: DismissDirection.horizontal,
-              margin: EdgeInsets.all(15),
-              forwardAnimationCurve: Curves.easeOutBack,
-              colorText: Colors.white,
-            ));
+    await FirebaseFirestore.instance.collection("Users").doc(id).set(
+      {
+        "ID": id,
+        "Phone Number": phoneNo,
+        "Acre": acre,
+        "Guntha": guntha,
+        "Main Crop": mainCrop,
+        "Internal Crop": internalCrop,
+        "Irrigation Type": irrigationType,
+        "Irrigation Source": irrigationSource,
+        "District": district,
+        "Taluka": taluka,
+        "Village": village,
+      },
+    ).then((value) {
+      Get.snackbar(
+        "Sucess",
+        "Data Uploaded Successfully!",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        margin: EdgeInsets.all(15),
+        forwardAnimationCurve: Curves.easeOutBack,
+        colorText: Colors.white,
+      );
+      Future.delayed(const Duration(seconds: 5), () {
+        Get.toNamed("/dosageCalculator");
+      });
+    }).onError((error, stackTrace) {
+      Get.snackbar(
+        "Error",
+        error.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        margin: EdgeInsets.all(15),
+        forwardAnimationCurve: Curves.easeOutBack,
+        colorText: Colors.white,
+      );
+    });
   }
+
+  proceedNext() {}
 }
