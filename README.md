@@ -1,5 +1,7 @@
 # Dharati
 
+## v 1.0.0 completed.
+
 A new Flutter project.
 
 Project members:
