@@ -10,5 +10,5 @@ Project members:
 
 - Shivani Shirale
 
-- Apurva Patil
+- Apurva 
 
