@@ -1,11 +1,9 @@
-
 import 'package:dharati/services/FirebaseAllServices.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-
 
 class PhoneNum extends StatefulWidget {
   const PhoneNum({super.key});
@@ -22,8 +20,6 @@ class _PhoneNumState extends State<PhoneNum> {
   String number = '#';
   int minLength = 10;
   int maxLength = 10;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +40,7 @@ class _PhoneNumState extends State<PhoneNum> {
                 height: 5,
               ),
               Text(
-                'Phone Verification',
+                'मोबाईल क्रमांक पडताळणी',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -55,7 +51,7 @@ class _PhoneNumState extends State<PhoneNum> {
                 height: 10,
               ),
               Text(
-                'Enter Your Mobile Number',
+                'तुमचा मोबाईल क्रमांक टाका',
                 style: TextStyle(
                   color: Colors.black54,
                   fontSize: 18,
@@ -67,7 +63,7 @@ class _PhoneNumState extends State<PhoneNum> {
               ),
               IntlPhoneField(
                 decoration: InputDecoration(
-                  hintText: 'Phone Number',
+                  hintText: 'मोबाईल क्रमांक',
                   hintStyle: TextStyle(
                     color: Colors.grey,
                     fontSize: 18,
@@ -79,6 +75,7 @@ class _PhoneNumState extends State<PhoneNum> {
                   fontSize: 18,
                   fontWeight: FontWeight.w300,
                 ),
+                invalidNumberMessage: "अवैध क्रमांक",
                 initialCountryCode: countryISOCode,
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly,
@@ -155,8 +152,8 @@ class _PhoneNumState extends State<PhoneNum> {
                       //Navigator.pushNamed(context, "/otp");
                     } else {
                       Get.snackbar(
-                        "Error",
-                        "Invalid Number",
+                        "तसदीबद्दल क्षमस्व",
+                        "अवैध क्रमांक",
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: Colors.red,
                         isDismissible: true,
@@ -168,7 +165,7 @@ class _PhoneNumState extends State<PhoneNum> {
                     }
                   },
                   child: Text(
-                    'Send the OTP',
+                    'ओटीपी पाठवा',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 19,

@@ -77,13 +77,13 @@ class _DosageCalculationState extends State<DosageCalculation> {
     "40"
   ];
 
-  final crops = ["Sugarcane"];
+  final crops = ["ऊस"];
 
-  final doseType = ["Clear", "10:26:26", "DAP"];
+  final doseType = ["Clear", "10:26:26", "डीएपी"];
 
   String? selectedGuntha = "0";
 
-  String? selectedCrop = "Sugarcane";
+  String? selectedCrop = "ऊस";
 
   String? selectedDoseType = "Clear";
 
@@ -115,7 +115,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          "Dosage Calculator",
+          "डोस पद्धती",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
@@ -149,7 +149,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
                 children: [
                   Expanded(
                     child: Text(
-                      "Area",
+                      "क्षेत्र",
                       style: labelTextStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -159,7 +159,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
                     child: Expanded(
                       child: DropdownButtonFormField(
                         decoration: InputDecoration(
-                          labelText: "Guntha",
+                          labelText: "गुंठा",
                           labelStyle: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
@@ -178,7 +178,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
                         menuMaxHeight: 250,
                         value: selectedGuntha,
                         validator: (value) =>
-                            value == "0" ? "Please Select Guntha" : null,
+                            value == "0" ? "कृपया गुंठा निवडा" : null,
                         items: _gunthas
                             .map((e) => DropdownMenuItem(
                                   child: Text(e),
@@ -206,7 +206,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
                 children: [
                   Expanded(
                     child: Text(
-                      "Crop",
+                      "पीक",
                       style: labelTextStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -229,7 +229,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
                         menuMaxHeight: 250,
                         value: selectedCrop,
                         validator: (value) =>
-                            value == null ? "Please Select Crop" : null,
+                            value == null ? "कृपया पीक निवडा" : null,
                         items: crops
                             .map((e) => DropdownMenuItem(
                                   child: Text(e),
@@ -255,7 +255,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
                 children: [
                   Expanded(
                     child: Text(
-                      "Dose Type",
+                      "डोस प्रकार",
                       style: labelTextStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -278,7 +278,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
                         menuMaxHeight: 250,
                         value: selectedDoseType,
                         validator: (value) =>
-                            value == null ? "Please Select Dose Type" : null,
+                            value == null ? "कृपया डोस प्रकार निवडा" : null,
                         items: doseType
                             .map((e) => DropdownMenuItem(
                                   child: Text(e),
@@ -319,29 +319,29 @@ class _DosageCalculationState extends State<DosageCalculation> {
                       dataRowHeight: 80,
                       columns: [
                         DataColumn(
-                          label:
-                              Text("Fertilizer", style: tableColumnTextStyle),
+                          label: Text("खत", style: tableColumnTextStyle),
                         ),
                         DataColumn(
                             label: Text(
                                 selectedDoseType == null
                                     ? "-"
-                                    : selectedDoseType.toString() + " (K.G.)",
+                                    : selectedDoseType.toString() + " (किलो)",
                                 style: tableColumnTextStyle),
                             numeric: true),
                       ],
                       rows: [
                         DataRow(cells: [
-                          DataCell(Text("Urea", style: tableDataHeadTextStyle)),
+                          DataCell(
+                              Text("युरिया", style: tableDataHeadTextStyle)),
                           DataCell(Text(urea, style: tableDataTextStyle)),
                         ]),
                         DataRow(cells: [
-                          DataCell(Text("SSP\n(Super Single Phosphate)",
+                          DataCell(Text("SSP\n(सुपर सिंगल फॉस्फेट)",
                               style: tableDataHeadTextStyle)),
                           DataCell(Text(ssp, style: tableDataTextStyle)),
                         ]),
                         DataRow(cells: [
-                          DataCell(Text("MOP (Potash)",
+                          DataCell(Text("MOP (पोटॅश)",
                               style: tableDataHeadTextStyle)),
                           DataCell(Text(mop, style: tableDataTextStyle)),
                         ]),
@@ -351,42 +351,42 @@ class _DosageCalculationState extends State<DosageCalculation> {
                           DataCell(Text(npk, style: tableDataTextStyle)),
                         ]),
                         DataRow(cells: [
-                          DataCell(Text("DAP", style: tableDataHeadTextStyle)),
+                          DataCell(
+                              Text("डीएपी", style: tableDataHeadTextStyle)),
                           DataCell(Text(dap, style: tableDataTextStyle)),
                         ]),
                         DataRow(cells: [
-                          DataCell(Text("Magnessium",
+                          DataCell(Text("मॅग्नेशियम",
                               style: tableDataHeadTextStyle)),
                           DataCell(Text(magnessium, style: tableDataTextStyle)),
                         ]),
                         DataRow(cells: [
                           DataCell(
-                              Text("Silicon", style: tableDataHeadTextStyle)),
+                              Text("सिलिकॉन", style: tableDataHeadTextStyle)),
                           DataCell(Text(silicon, style: tableDataTextStyle)),
                         ]),
                         DataRow(cells: [
-                          DataCell(
-                              Text("Sulphur", style: tableDataHeadTextStyle)),
+                          DataCell(Text("गंधक", style: tableDataHeadTextStyle)),
                           DataCell(Text(sulphur, style: tableDataTextStyle)),
                         ]),
                         DataRow(cells: [
-                          DataCell(Text("Calcium / \nCalcium Nitrate",
+                          DataCell(Text("कॅल्शियम / \nकॅल्शियम नायट्रेट",
                               style: tableDataHeadTextStyle)),
                           DataCell(Text(calcium, style: tableDataTextStyle)),
                         ]),
                         DataRow(cells: [
-                          DataCell(Text("Micro Nutrient",
+                          DataCell(Text("सूक्ष्म अन्नद्रव्ये",
                               style: tableDataHeadTextStyle)),
                           DataCell(
                               Text(microNeutrient, style: tableDataTextStyle)),
                         ]),
                         DataRow(cells: [
                           DataCell(
-                              Text("Humic", style: tableDataHeadTextStyle)),
+                              Text("ह्युमिक", style: tableDataHeadTextStyle)),
                           DataCell(Text(humic, style: tableDataTextStyle)),
                         ]),
                         DataRow(cells: [
-                          DataCell(Text("Organic / Nimboli",
+                          DataCell(Text("सेंद्रिय / निंबोळी",
                               style: tableDataHeadTextStyle)),
                           DataCell(Text(nimboli, style: tableDataTextStyle)),
                         ]),
@@ -475,7 +475,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
       clearFertilizers();
     } else if (doseType == "10:26:26") {
       npkFertilizers();
-    } else if (doseType == "DAP") {
+    } else if (doseType == "डीएपी") {
       dapFertilizers();
     }
     clearAll();

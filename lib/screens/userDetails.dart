@@ -71,20 +71,20 @@ class _UserDetailsState extends State<UserDetails> {
     "40"
   ];
 
-  final mainCrops = ["Sugarcane"];
+  final mainCrops = ["ऊस"];
 
   final internalCrops = [
-    "Groundnut",
-    "Jowar",
-    "Onion",
-    "Soyabean",
-    "Vegetables",
-    "Wheat"
+    "भुईमूग",
+    "ज्वारी",
+    "कांदा",
+    "सोयाबीन",
+    "भाजीपाला",
+    "गहू"
   ];
 
-  final irrigationTypes = ["Drip", "Traditional"];
+  final irrigationTypes = ["ठिबक", "पारंपारिक"];
 
-  final irrigationSources = ["Borewell", "River", "Well"];
+  final irrigationSources = ["बोअरवेल", "नदी", "विहीर"];
 
   List<dynamic> allDistricts = [];
   List<dynamic> allTalukas = [];
@@ -116,7 +116,7 @@ class _UserDetailsState extends State<UserDetails> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          "Welcome to Dharati",
+          "सुस्वागतम",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
@@ -139,7 +139,7 @@ class _UserDetailsState extends State<UserDetails> {
                       Container(
                         child: InputDecorator(
                           decoration: InputDecoration(
-                            labelText: "Total Agri Land",
+                            labelText: "एकूण शेतजमीन",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -159,7 +159,7 @@ class _UserDetailsState extends State<UserDetails> {
                                   child: Expanded(
                                     child: DropdownButtonFormField(
                                       decoration: InputDecoration(
-                                        labelText: "Acre",
+                                        labelText: "एकर",
                                         labelStyle: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w900,
@@ -182,7 +182,7 @@ class _UserDetailsState extends State<UserDetails> {
                                       value: selectedAcre,
                                       validator: (value) => (value == "0" &&
                                               selectedGuntha == "0")
-                                          ? "Please Select Acre"
+                                          ? "कृपया एकर निवडा"
                                           : null,
                                       items: _acres
                                           .map((e) => DropdownMenuItem(
@@ -209,7 +209,7 @@ class _UserDetailsState extends State<UserDetails> {
                                   child: Expanded(
                                     child: DropdownButtonFormField(
                                       decoration: InputDecoration(
-                                        labelText: "Guntha",
+                                        labelText: "गुंठा",
                                         floatingLabelAlignment:
                                             FloatingLabelAlignment.start,
                                         labelStyle: TextStyle(
@@ -234,7 +234,7 @@ class _UserDetailsState extends State<UserDetails> {
                                       value: selectedGuntha,
                                       validator: (value) =>
                                           (value == "0" && selectedAcre == "0")
-                                              ? "Please Select Guntha"
+                                              ? "कृपया गुंठा निवडा"
                                               : null,
                                       items: _gunthas
                                           .map((e) => DropdownMenuItem(
@@ -263,7 +263,7 @@ class _UserDetailsState extends State<UserDetails> {
                         alignedDropdown: true,
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(
-                            labelText: "Main Crop",
+                            labelText: "मुख्य पीक",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
@@ -282,7 +282,7 @@ class _UserDetailsState extends State<UserDetails> {
                           menuMaxHeight: 250,
                           isExpanded: true,
                           isDense: true,
-                          hint: Text("Select Main Crop"),
+                          hint: Text("मुख्य पीक निवडा"),
                           value: selectedMainCrop,
                           items: mainCrops
                               .map((e) => DropdownMenuItem(
@@ -297,7 +297,7 @@ class _UserDetailsState extends State<UserDetails> {
                                 selectedMainCrop = newValue;
                               })),
                           validator: (value) =>
-                              value == null ? "Please Select Main Crop" : null,
+                              value == null ? "कृपया मुख्य पीक निवडा" : null,
                         ),
                       ),
                       SizedBox(
@@ -307,7 +307,7 @@ class _UserDetailsState extends State<UserDetails> {
                         alignedDropdown: true,
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(
-                            labelText: "Internal Crop",
+                            labelText: "अंतर्गत पीक",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
@@ -326,7 +326,7 @@ class _UserDetailsState extends State<UserDetails> {
                           menuMaxHeight: 250,
                           isExpanded: true,
                           isDense: true,
-                          hint: Text("Select Internal Crop"),
+                          hint: Text("अंतर्गत पीक निवडा"),
                           value: selectedInternalCrop,
                           items: internalCrops
                               .map((e) => DropdownMenuItem<String>(
@@ -340,9 +340,8 @@ class _UserDetailsState extends State<UserDetails> {
                           onSaved: ((newValue) => setState(() {
                                 selectedInternalCrop = newValue;
                               })),
-                          validator: (value) => value == null
-                              ? "Please Select Internal Crop"
-                              : null,
+                          validator: (value) =>
+                              value == null ? "कृपया अंतर्गत पीक निवडा" : null,
                         ),
                       ),
                       SizedBox(
@@ -352,7 +351,7 @@ class _UserDetailsState extends State<UserDetails> {
                         alignedDropdown: true,
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(
-                            labelText: "Irrigation Type",
+                            labelText: "सिंचन प्रकार",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
@@ -371,7 +370,7 @@ class _UserDetailsState extends State<UserDetails> {
                           menuMaxHeight: 250,
                           isExpanded: true,
                           isDense: true,
-                          hint: Text("Select Irrigation Type"),
+                          hint: Text("सिंचन प्रकार निवडा"),
                           value: selectedInrrigationType,
                           items: irrigationTypes
                               .map((e) => DropdownMenuItem<String>(
@@ -385,9 +384,8 @@ class _UserDetailsState extends State<UserDetails> {
                           onSaved: ((newValue) => setState(() {
                                 selectedInrrigationType = newValue;
                               })),
-                          validator: (value) => value == null
-                              ? "Please Select Irrigation Type"
-                              : null,
+                          validator: (value) =>
+                              value == null ? "कृपया सिंचन प्रकार निवडा" : null,
                         ),
                       ),
                       SizedBox(
@@ -397,7 +395,7 @@ class _UserDetailsState extends State<UserDetails> {
                         alignedDropdown: true,
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(
-                            labelText: "Irrigation Source",
+                            labelText: "सिंचन स्त्रोत",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
@@ -416,7 +414,7 @@ class _UserDetailsState extends State<UserDetails> {
                           menuMaxHeight: 250,
                           isExpanded: true,
                           isDense: true,
-                          hint: Text("Select Irrigation Source"),
+                          hint: Text("सिंचन स्त्रोत निवडा"),
                           value: selectedInrrigationSource,
                           items: irrigationSources
                               .map((e) => DropdownMenuItem<String>(
@@ -431,7 +429,7 @@ class _UserDetailsState extends State<UserDetails> {
                                 selectedInrrigationSource = newValue;
                               })),
                           validator: (value) => value == null
-                              ? "Please Select Irrigation Source"
+                              ? "कृपया सिंचन स्त्रोत निवडा"
                               : null,
                         ),
                       ),
@@ -442,7 +440,7 @@ class _UserDetailsState extends State<UserDetails> {
                         alignedDropdown: true,
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(
-                            labelText: "District",
+                            labelText: "जिल्हा",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
@@ -461,7 +459,7 @@ class _UserDetailsState extends State<UserDetails> {
                           menuMaxHeight: 250,
                           isExpanded: true,
                           isDense: true,
-                          hint: Text("Select District"),
+                          hint: Text("जिल्हा निवडा"),
                           value: selectedDistrict,
                           items: allDistricts
                               .map((e) => DropdownMenuItem<String>(
@@ -481,7 +479,7 @@ class _UserDetailsState extends State<UserDetails> {
                                 selectedDistrict = newValue;
                               })),
                           validator: (value) =>
-                              value == null ? "Please Select District" : null,
+                              value == null ? "कृपया जिल्हा निवडा" : null,
                         ),
                       ),
                       SizedBox(
@@ -491,7 +489,7 @@ class _UserDetailsState extends State<UserDetails> {
                         alignedDropdown: true,
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(
-                            labelText: "Taluka",
+                            labelText: "तालुका",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
@@ -510,7 +508,7 @@ class _UserDetailsState extends State<UserDetails> {
                           menuMaxHeight: 250,
                           isExpanded: true,
                           isDense: true,
-                          hint: Text("Select Taluka"),
+                          hint: Text("तालुका निवडा"),
                           value: selectedTaluka,
                           items: availableTalukas
                               .map((e) => DropdownMenuItem<String>(
@@ -528,7 +526,7 @@ class _UserDetailsState extends State<UserDetails> {
                                 selectedTaluka = newValue;
                               })),
                           validator: (value) =>
-                              value == null ? "Please Select Taluka" : null,
+                              value == null ? "कृपया तालुका निवडा" : null,
                         ),
                       ),
                       SizedBox(
@@ -538,7 +536,7 @@ class _UserDetailsState extends State<UserDetails> {
                         alignedDropdown: true,
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(
-                            labelText: "Village",
+                            labelText: "गाव",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
@@ -557,7 +555,7 @@ class _UserDetailsState extends State<UserDetails> {
                           menuMaxHeight: 250,
                           isExpanded: true,
                           isDense: true,
-                          hint: Text("Select Village"),
+                          hint: Text("गाव निवडा"),
                           value: selectedVillage,
                           items: availableVillages
                               .map((e) => DropdownMenuItem<String>(
@@ -572,7 +570,7 @@ class _UserDetailsState extends State<UserDetails> {
                                 selectedVillage = newValue;
                               })),
                           validator: (value) =>
-                              value == null ? "Please Select Village" : null,
+                              value == null ? "कृपया गाव निवडा" : null,
                         ),
                       ),
                       SizedBox(
@@ -595,8 +593,8 @@ class _UserDetailsState extends State<UserDetails> {
                                   selectedVillage!);
                             } else {
                               Get.snackbar(
-                                "Invalid Data",
-                                "All Fields are Mandatory",
+                                "अवैध माहिती",
+                                "सर्व माहिती अनिवार्य आहे!",
                                 snackPosition: SnackPosition.BOTTOM,
                                 backgroundColor: Colors.red,
                                 isDismissible: true,
@@ -608,7 +606,7 @@ class _UserDetailsState extends State<UserDetails> {
                             }
                           },
                           child: Text(
-                            'Update and Save',
+                            'जतन करा',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -689,7 +687,7 @@ class _UserDetailsState extends State<UserDetails> {
 
   Future<void> getUserData() async {
     var document = await FirebaseFirestore.instance
-        .collection("Users")
+        .collection("New Users")
         .doc(user.uid)
         .get();
     if (document.exists) {

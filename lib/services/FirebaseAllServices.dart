@@ -18,7 +18,7 @@ class FirebaseAllServices extends GetxController {
         },
         verificationFailed: (FirebaseAuthException e) {
           Get.snackbar(
-            "Error",
+            "तसदीबद्दल क्षमस्व",
             e.message!,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
@@ -40,7 +40,7 @@ class FirebaseAllServices extends GetxController {
       );
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
-        "Error",
+        "तसदीबद्दल क्षमस्व",
         e.message!,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
@@ -52,8 +52,8 @@ class FirebaseAllServices extends GetxController {
       );
     } catch (e) {
       Get.snackbar(
-        "Error",
-        "OTP Failed",
+        "तसदीबद्दल क्षमस्व",
+        "ओटीपी तपासून पहा!",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         isDismissible: true,
@@ -73,7 +73,7 @@ class FirebaseAllServices extends GetxController {
       return credentials.user != null ? true : false;
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
-        "Error",
+        "तसदीबद्दल क्षमस्व",
         e.message!,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
@@ -92,7 +92,7 @@ class FirebaseAllServices extends GetxController {
       await _auth.signOut();
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
-        "Error",
+        "तसदीबद्दल क्षमस्व",
         e.message!,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
@@ -110,7 +110,7 @@ class FirebaseAllServices extends GetxController {
       await _auth.currentUser!.delete();
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
-        "Error",
+        "तसदीबद्दल क्षमस्व",
         e.message!,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
@@ -138,7 +138,7 @@ class FirebaseAllServices extends GetxController {
     final user = _auth.currentUser!;
     final id = user.uid;
     final phoneNo = user.phoneNumber;
-    await FirebaseFirestore.instance.collection("Users").doc(id).set(
+    await FirebaseFirestore.instance.collection("New Users").doc(id).set(
       {
         "ID": id,
         "Phone Number": phoneNo,
@@ -154,8 +154,8 @@ class FirebaseAllServices extends GetxController {
       },
     ).then((value) {
       Get.snackbar(
-        "Sucess",
-        "Data Uploaded Successfully!",
+        "धन्यवाद",
+        "माहिती यशस्वीरित्या जतन केली आहे!",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
         isDismissible: true,
@@ -169,7 +169,7 @@ class FirebaseAllServices extends GetxController {
       });
     }).onError((error, stackTrace) {
       Get.snackbar(
-        "Error",
+        "तसदीबद्दल क्षमस्व",
         error.toString(),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
@@ -181,6 +181,4 @@ class FirebaseAllServices extends GetxController {
       );
     });
   }
-
-  proceedNext() {}
 }
