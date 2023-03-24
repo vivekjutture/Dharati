@@ -86,11 +86,7 @@ class _UserDetailsState extends State<UserDetails> {
 
   final irrigationSources = ["बोअरवेल", "नदी", "विहीर"];
 
-  List<dynamic> allDistricts = [];
-  List<dynamic> allTalukas = [];
-  var availableTalukas = [];
-  List<dynamic> allVillages = [];
-  var availableVillages = [];
+  final fertilizerTypes = ["सेंद्रिय", "रासायनिक"];
 
   String? selectedAcre = "0";
   String? selectedGuntha = "0";
@@ -98,13 +94,10 @@ class _UserDetailsState extends State<UserDetails> {
   String? selectedInternalCrop;
   String? selectedInrrigationType;
   String? selectedInrrigationSource;
-  String? selectedDistrict;
-  String? selectedTaluka;
-  String? selectedVillage;
+  String? seletedFertilizerType;
 
   @override
   void initState() {
-    createDistList();
     getUserData();
     super.initState();
   }
@@ -179,6 +172,7 @@ class _UserDetailsState extends State<UserDetails> {
                                       ),
                                       borderRadius: BorderRadius.circular(5),
                                       menuMaxHeight: 250,
+                                      hint: Text("एकर"),
                                       value: selectedAcre,
                                       validator: (value) => (value == "0" &&
                                               selectedGuntha == "0")
@@ -231,6 +225,7 @@ class _UserDetailsState extends State<UserDetails> {
                                       ),
                                       borderRadius: BorderRadius.circular(5),
                                       menuMaxHeight: 250,
+                                      hint: Text("गुंठा"),
                                       value: selectedGuntha,
                                       validator: (value) =>
                                           (value == "0" && selectedAcre == "0")
@@ -440,7 +435,7 @@ class _UserDetailsState extends State<UserDetails> {
                         alignedDropdown: true,
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(
-                            labelText: "जिल्हा",
+                            labelText: "खत प्रकार",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
@@ -459,118 +454,22 @@ class _UserDetailsState extends State<UserDetails> {
                           menuMaxHeight: 250,
                           isExpanded: true,
                           isDense: true,
-                          hint: Text("जिल्हा निवडा"),
-                          value: selectedDistrict,
-                          items: allDistricts
+                          hint: Text("खत प्रकार निवडा"),
+                          value: seletedFertilizerType,
+                          items: fertilizerTypes
                               .map((e) => DropdownMenuItem<String>(
-                                    child: Text(e["label"]),
-                                    value: e["id"],
+                                    child: Text(e),
+                                    value: e,
                                   ))
                               .toList(),
                           onChanged: (value) => setState(() {
-                            selectedTaluka = null;
-                            selectedVillage = null;
-                            availableTalukas.clear();
-                            availableVillages.clear();
-                            selectedDistrict = value;
-                            fetchTalukas(selectedDistrict);
+                            seletedFertilizerType = value;
                           }),
                           onSaved: ((newValue) => setState(() {
-                                selectedDistrict = newValue;
+                                seletedFertilizerType = newValue;
                               })),
                           validator: (value) =>
-                              value == null ? "कृपया जिल्हा निवडा" : null,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            labelText: "तालुका",
-                            labelStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.green.shade900,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.green.shade500, width: 2),
-                            ),
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                          menuMaxHeight: 250,
-                          isExpanded: true,
-                          isDense: true,
-                          hint: Text("तालुका निवडा"),
-                          value: selectedTaluka,
-                          items: availableTalukas
-                              .map((e) => DropdownMenuItem<String>(
-                                    child: Text(e["label"]),
-                                    value: e["id"],
-                                  ))
-                              .toList(),
-                          onChanged: (value) => setState(() {
-                            selectedVillage = null;
-                            availableVillages.clear();
-                            selectedTaluka = value;
-                            fetchVillages(selectedTaluka);
-                          }),
-                          onSaved: ((newValue) => setState(() {
-                                selectedTaluka = newValue;
-                              })),
-                          validator: (value) =>
-                              value == null ? "कृपया तालुका निवडा" : null,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            labelText: "गाव",
-                            labelStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.green.shade900,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.green.shade500, width: 2),
-                            ),
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                          menuMaxHeight: 250,
-                          isExpanded: true,
-                          isDense: true,
-                          hint: Text("गाव निवडा"),
-                          value: selectedVillage,
-                          items: availableVillages
-                              .map((e) => DropdownMenuItem<String>(
-                                    child: Text(e["label"]),
-                                    value: e["id"],
-                                  ))
-                              .toList(),
-                          onChanged: (value) => setState(() {
-                            selectedVillage = value;
-                          }),
-                          onSaved: ((newValue) => setState(() {
-                                selectedVillage = newValue;
-                              })),
-                          validator: (value) =>
-                              value == null ? "कृपया गाव निवडा" : null,
+                              value == null ? "कृपया खत प्रकार निवडा" : null,
                         ),
                       ),
                       SizedBox(
@@ -588,9 +487,7 @@ class _UserDetailsState extends State<UserDetails> {
                                   selectedInternalCrop!,
                                   selectedInrrigationType!,
                                   selectedInrrigationSource!,
-                                  selectedDistrict!,
-                                  selectedTaluka!,
-                                  selectedVillage!);
+                                  seletedFertilizerType!);
                             } else {
                               Get.snackbar(
                                 "अवैध माहिती",
@@ -627,64 +524,6 @@ class _UserDetailsState extends State<UserDetails> {
     );
   }
 
-  Future<void> createDistList() async {
-    /*final districtsURL = "https://jsonkeeper.com/b/Y44B";
-    final talukasURL =
-        "https://drive.google.com/file/d/1PayUcxOF9cf1Z8JYibIG4fBGdkv9XGf4/view?usp=share_link";
-    final villagesURL =
-        "https://drive.google.com/file/d/1Cs0L6eKeUG2UNugQ1H_ARRtCT5e_PRKU/view?usp=share_link";*/
-    /*try {
-      var jsonDistrictsData = await http.get(Uri.parse(districtsURL));
-      if (jsonDistrictsData.statusCode == 200) {
-        List<dynamic> districtsList =
-            await json.decode(jsonDistrictsData.body) as List<dynamic>;
-        setState(() {
-          allDistricts = districtsList;
-        });
-        print("okay");
-      }
-    } catch (e) {
-      print(e.toString());
-    }*/
-    final jsonDistrictsData =
-        await rootBundle.loadString("assets/JSON Files/Districts.json");
-    List<dynamic> districtsList =
-        json.decode(jsonDistrictsData) as List<dynamic>;
-    setState(() {
-      allDistricts = districtsList;
-    });
-    final jsonTalukasData =
-        await rootBundle.loadString("assets/JSON Files/Talukas.json");
-    List<dynamic> talukasList =
-        await json.decode(jsonTalukasData) as List<dynamic>;
-    setState(() {
-      allTalukas = talukasList;
-    });
-    final jsonVillagesData =
-        await rootBundle.loadString("assets/JSON Files/Villages.json");
-    List<dynamic> villagesList =
-        await json.decode(jsonVillagesData) as List<dynamic>;
-    setState(() {
-      allVillages = villagesList;
-    });
-  }
-
-  fetchTalukas(String? district) {
-    setState(() {
-      availableTalukas = allTalukas
-          .where((element) => element["parentId"] == district)
-          .toList();
-    });
-  }
-
-  fetchVillages(String? taluka) {
-    setState(() {
-      availableVillages = allVillages
-          .where((element) => element["parentId"] == taluka)
-          .toList();
-    });
-  }
-
   Future<void> getUserData() async {
     var document = await FirebaseFirestore.instance
         .collection("New Users")
@@ -699,11 +538,7 @@ class _UserDetailsState extends State<UserDetails> {
         selectedInternalCrop = data["Internal Crop"];
         selectedInrrigationType = data["Irrigation Type"];
         selectedInrrigationSource = data["Irrigation Source"];
-        selectedDistrict = data["District"];
-        selectedTaluka = data["Taluka"];
-        selectedVillage = data["Village"];
-        fetchTalukas(selectedDistrict);
-        fetchVillages(selectedTaluka);
+        seletedFertilizerType = data["Fertilizer Type"];
       });
       Future.delayed(Duration(seconds: 7), () {
         setState(() {

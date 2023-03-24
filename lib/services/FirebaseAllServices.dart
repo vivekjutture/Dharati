@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 class FirebaseAllServices extends GetxController {
   static FirebaseAllServices get instance => Get.find();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final db = FirebaseFirestore.instance;
 
   var verifyId = ''.obs;
 
@@ -132,13 +133,11 @@ class FirebaseAllServices extends GetxController {
       String internalCrop,
       String irrigationType,
       String irrigationSource,
-      String district,
-      String taluka,
-      String village) async {
+      String seletedFertilizerType) async {
     final user = _auth.currentUser!;
     final id = user.uid;
     final phoneNo = user.phoneNumber;
-    await FirebaseFirestore.instance.collection("New Users").doc(id).set(
+    await db.collection("New Users").doc(id).set(
       {
         "ID": id,
         "Phone Number": phoneNo,
@@ -148,10 +147,9 @@ class FirebaseAllServices extends GetxController {
         "Internal Crop": internalCrop,
         "Irrigation Type": irrigationType,
         "Irrigation Source": irrigationSource,
-        "District": district,
-        "Taluka": taluka,
-        "Village": village,
+        "Fertilizer Type": seletedFertilizerType,
       },
+      SetOptions(merge: true),
     ).then((value) {
       Get.snackbar(
         "धन्यवाद",
@@ -166,6 +164,47 @@ class FirebaseAllServices extends GetxController {
       );
       Future.delayed(const Duration(seconds: 5), () {
         Get.toNamed("/dosageCalculator");
+      });
+    }).onError((error, stackTrace) {
+      Get.snackbar(
+        "तसदीबद्दल क्षमस्व",
+        error.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        margin: EdgeInsets.all(15),
+        forwardAnimationCurve: Curves.easeOutBack,
+        colorText: Colors.white,
+      );
+    });
+  }
+
+  Future<void> addLocationdata(
+      String district, String taluka, String village, String nextPage) async {
+    final user = _auth.currentUser!;
+    final id = user.uid;
+    await db.collection("New Users").doc(id).set(
+      {
+        "District": district,
+        "Taluka": taluka,
+        "Village": village,
+      },
+      SetOptions(merge: true),
+    ).then((value) {
+      Get.snackbar(
+        "धन्यवाद",
+        "माहिती यशस्वीरित्या जतन केली आहे!",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        margin: EdgeInsets.all(15),
+        forwardAnimationCurve: Curves.easeOutBack,
+        colorText: Colors.white,
+      );
+      Future.delayed(const Duration(seconds: 5), () {
+        Get.toNamed(nextPage);
       });
     }).onError((error, stackTrace) {
       Get.snackbar(
