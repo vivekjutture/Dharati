@@ -1,5 +1,10 @@
 import 'dart:async';
+import 'package:dharati/screens/buyFarmingServices.dart';
+import 'package:dharati/screens/buyProduct.dart';
+import 'package:dharati/screens/chooseService.dart';
 import 'package:dharati/screens/dosageCalculator.dart';
+import 'package:dharati/screens/sellFarmingServices.dart';
+import 'package:dharati/screens/sellProduct.dart';
 import 'package:dharati/services/FirebaseAllServices.dart';
 import 'package:dharati/screens/userDetails.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,9 +14,6 @@ import 'package:dharati/screens/otp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:dharati/services/firebase_options.dart';
 import 'package:get/get.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,12 +54,17 @@ class _DharatiAppState extends State<DharatiApp> {
     var controller = Get.put(FirebaseAllServices());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: userLoggedIn ? const UserDetails() : const PhoneNum(),
+      home: userLoggedIn ? const ChooseService() : const PhoneNum(),
       routes: {
         '/phone': (context) => const PhoneNum(),
         '/otp': (context) => const OTPVerification(),
         '/userdetails': (context) => const UserDetails(),
         '/dosageCalculator': (context) => const DosageCalculation(),
+        '/buyProduct': (context) => const BuyProduct(),
+        '/sellProduct': (context) => const SellProduct(),
+        '/buyFarmingServices': (context) => const BuyFarmingServices(),
+        '/sellFarmingServices': (context) => const SellFarmingServices(),
+        '/chooseService': (context) => const ChooseService(),
       },
     );
   }
@@ -75,37 +82,4 @@ class _DharatiAppState extends State<DharatiApp> {
       }
     });
   }
-
-  /*getConnectivity()  =>
-      subscription = Connectivity().onConnectivityChanged.listen(
-        (ConnectivityResult result) async {
-          isDeviceConnected = await InternetConnectionChecker().hasConnection;
-          if (!isDeviceConnected && isAlertSet == false) {
-            showDialogBox();
-            setState(() => isAlertSet = true);
-          }
-        },
-      );
-  showDialogBox() => showCupertinoDialog<String>(
-        context: context,
-        builder: (BuildContext context) => CupertinoAlertDialog(
-          title: const Text('No Connection'),
-          content: const Text('Please check your internet connectivity'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context, 'Cancel');
-                setState(() => isAlertSet = false);
-                isDeviceConnected =
-                    await InternetConnectionChecker().hasConnection;
-                if (!isDeviceConnected) {
-                  showDialogBox();
-                  setState(() => isAlertSet = true);
-                }
-              },
-              child: const Text('Refresh'),
-            ),
-          ],
-        ),
-      );*/
 }
