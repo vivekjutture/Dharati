@@ -9,11 +9,14 @@ class BuyProduct extends StatefulWidget {
 }
 
 class _BuyProductState extends State<BuyProduct> {
-  DateTime date = DateTime(2023, 03, 25);
-  bool _valueVillage = false;
+  DateTime date = DateTime.now();
+  TextEditingController tc = TextEditingController();
+  /*bool _valueVillage = true;
   bool _valueTaluka = false;
   bool _valueDistrict = false;
-  bool _valueState = false;
+  bool _valueState = false;*/
+
+  String? _valueLevel = "गाव पातळी";
   final mainCropType = ['पीक', 'भाजी', 'पशुधन'];
   var availableSubCropType = [];
   final subCropType1 = [
@@ -47,7 +50,7 @@ class _BuyProductState extends State<BuyProduct> {
     'कारले'
   ];
   final subCropType3 = ['गाई', 'म्हशी', 'शेळ्या', 'डुकरे'];
-  //final today = DateUtils.dateOnly(DateTime.now());
+
   String? selectedSubType = 'गहू';
   String? selectedMainType = 'पीक';
   String? selectedBuyDate = " ";
@@ -57,7 +60,7 @@ class _BuyProductState extends State<BuyProduct> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(
+        title: const Text(
           "खरेदी",
           style: TextStyle(
             fontSize: 18,
@@ -70,18 +73,18 @@ class _BuyProductState extends State<BuyProduct> {
       ),
       body: SingleChildScrollView(
           child: Container(
-        padding: EdgeInsets.all(25.0),
+        padding: const EdgeInsets.all(25.0),
         child: Form(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
               Row(
                 children: [
-                  Text(
+                  const Text(
                     'मुख्य प्रकार',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 30,
                   ),
                   ButtonTheme(
@@ -111,8 +114,8 @@ class _BuyProductState extends State<BuyProduct> {
                             value == "0" ? "कृपया मुख्य प्रकार निवडा" : null,
                         items: mainCropType
                             .map((e) => DropdownMenuItem(
-                                  child: Text(e),
                                   value: e,
+                                  child: Text(e),
                                 ))
                             .toList(),
                         onChanged: (value) => setState(() {
@@ -129,16 +132,16 @@ class _BuyProductState extends State<BuyProduct> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Row(
                 children: [
-                  Text(
+                  const Text(
                     'उप प्रकार',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
                   ),
                   ButtonTheme(
@@ -168,8 +171,8 @@ class _BuyProductState extends State<BuyProduct> {
                             value == "0" ? "कृपया उप प्रकार निवडा" : null,
                         items: availableSubCropType
                             .map((e) => DropdownMenuItem(
-                                  child: Text(e),
                                   value: e,
+                                  child: Text(e),
                                 ))
                             .toList(),
                         onChanged: (value) => setState(() {
@@ -193,30 +196,41 @@ class _BuyProductState extends State<BuyProduct> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   ),
                   SizedBox(
-                    width: 40,
+                    width: 25,
                   ),
-                  Text(
-                    '${date.year}/${date.month}/${date.day}',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.calendar_today),
-                    tooltip: 'Select Buy Date',
-                    onPressed: () async {
-                      DateTime? newDate = await showDatePicker(
-                        context: context,
-                        initialDate: date,
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime(2100),
-                      );
-                      if (newDate == null) return;
+                  Expanded(
+                    child: TextFormField(
+                      controller: tc,
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.calendar_today_rounded),
+                        labelText: "तारीख निवडा",
+                        labelStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(
+                              color: Colors.green.shade300, width: 1),
+                        ),
+                      ),
+                      onTap: () async {
+                        DateTime? newDate = await showDatePicker(
+                          context: context,
+                          initialDate: date,
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2025),
+                        );
+                        if (newDate == null) return;
 
-                      setState(() => date = newDate);
-                    },
-                  ),
+                        setState(() => tc.text =
+                            '${newDate.year}/${newDate.month}/${newDate.day}');
+                      },
+                    ),
+                  )
                 ],
               ),
               SizedBox(
@@ -237,28 +251,26 @@ class _BuyProductState extends State<BuyProduct> {
               Row(
                 children: [
                   Expanded(
-                    child: CheckboxListTile(
-                      value: _valueVillage,
-                      selected: _valueVillage,
+                    child: RadioListTile(
+                      value: "गाव पातळी",
                       title: const Text("गाव पातळी"),
                       activeColor: Colors.green,
-                      checkColor: Colors.white,
+                      groupValue: _valueLevel,
                       secondary: const Icon(Icons.holiday_village),
-                      onChanged: (bool? value) {
-                        setState(() => _valueVillage = value!);
+                      onChanged: (String? value) {
+                        setState(() => _valueLevel = value!);
                       },
                     ),
                   ),
                   Expanded(
-                    child: CheckboxListTile(
-                      value: _valueTaluka,
-                      selected: _valueTaluka,
+                    child: RadioListTile(
+                      value: "तालुका पातळी",
                       title: const Text("तालुका पातळी"),
                       activeColor: Colors.green,
-                      checkColor: Colors.white,
-                      secondary: const Icon(Icons.holiday_village),
-                      onChanged: (bool? value) {
-                        setState(() => _valueTaluka = value!);
+                      groupValue: _valueLevel,
+                      secondary: const Icon(Icons.location_city_rounded),
+                      onChanged: (String? value) {
+                        setState(() => _valueLevel = value!);
                       },
                     ),
                   ),
@@ -268,30 +280,29 @@ class _BuyProductState extends State<BuyProduct> {
                 height: 20,
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Expanded(
-                    child: CheckboxListTile(
-                      value: _valueDistrict,
-                      selected: _valueDistrict,
+                    child: RadioListTile(
+                      value: "जिल्हा पातळी",
                       title: const Text("जिल्हा पातळी"),
                       activeColor: Colors.green,
-                      checkColor: Colors.white,
-                      secondary: const Icon(Icons.holiday_village),
-                      onChanged: (bool? value) {
-                        setState(() => _valueDistrict = value!);
+                      groupValue: _valueLevel,
+                      secondary: const Icon(Icons.location_city),
+                      onChanged: (String? value) {
+                        setState(() => _valueLevel = value!);
                       },
                     ),
                   ),
                   Expanded(
-                    child: CheckboxListTile(
-                      value: _valueState,
-                      selected: _valueState,
+                    child: RadioListTile(
+                      value: "राज्य पातळी",
                       title: const Text("राज्य पातळी"),
                       activeColor: Colors.green,
-                      checkColor: Colors.white,
-                      secondary: const Icon(Icons.holiday_village),
-                      onChanged: (bool? value) {
-                        setState(() => _valueState = value!);
+                      groupValue: _valueLevel,
+                      secondary: const Icon(Icons.area_chart_rounded),
+                      onChanged: (String? value) {
+                        setState(() => _valueLevel = value!);
                       },
                     ),
                   ),
