@@ -51,7 +51,6 @@ class _BuyProductState extends State<BuyProduct> {
     'कारले'
   ];
   final subCropType3 = ['गाई', 'म्हशी', 'शेळ्या', 'डुकरे'];
-
   String? selectedSubType = 'गहू';
   String? selectedMainType = 'पीक';
   String? selectedBuyDate = " ";
