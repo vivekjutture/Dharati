@@ -315,7 +315,10 @@ class _BuyProductState extends State<BuyProduct> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/checkProduct', (route) => false);
+                      },
                       style: ElevatedButton.styleFrom(
                           primary: Colors.green,
                           minimumSize: Size(40, 50) // Background color

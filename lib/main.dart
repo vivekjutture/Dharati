@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:dharati/screens/buyFarmingServices.dart';
 import 'package:dharati/screens/buyProduct.dart';
+import 'package:dharati/screens/checkProduct.dart';
 import 'package:dharati/screens/chooseService.dart';
 import 'package:dharati/screens/dosageCalculator.dart';
 import 'package:dharati/screens/sellFarmingServices.dart';
@@ -65,6 +66,7 @@ class _DharatiAppState extends State<DharatiApp> {
         '/buyFarmingServices': (context) => const BuyFarmingServices(),
         '/sellFarmingServices': (context) => const SellFarmingServices(),
         '/chooseService': (context) => const ChooseService(),
+        '/checkProduct': (context) => const CheckProduct(),
       },
     );
   }
