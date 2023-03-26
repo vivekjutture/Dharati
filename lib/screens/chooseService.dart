@@ -42,268 +42,275 @@ class _ChooseServiceState extends State<ChooseService> {
     return Scaffold(
       body: loadingSts
           ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.all(25.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'सेवा निवडा',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 24,
+          : Center(
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.all(25.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'सेवा निवडा',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 24,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: Text("खत व्यवस्थापन / \nतज्ञ सल्ला"),
-                              value: "/userdetails",
-                              groupValue: nextPage,
-                              onChanged: (value) {
-                                setState(() {
-                                  nextPage = value.toString();
-                                });
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: RadioListTile(
-                              title: Text("विक्री"),
-                              value: "/sellProduct",
-                              groupValue: nextPage,
-                              onChanged: (value) {
-                                setState(() {
-                                  nextPage = value.toString();
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: Text("खरेदी"),
-                              value: "/buyProduct",
-                              groupValue: nextPage,
-                              onChanged: (value) {
-                                setState(() {
-                                  nextPage = value.toString();
-                                });
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: RadioListTile(
-                              title: Text("शेती सेवा"),
-                              value: "/buyFarmingServices",
-                              groupValue: nextPage,
-                              onChanged: (value) {
-                                setState(() {
-                                  nextPage = value.toString();
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            labelText: "जिल्हा",
-                            labelStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.green.shade900,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.green.shade500, width: 2),
-                            ),
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                          menuMaxHeight: 250,
-                          isExpanded: true,
-                          isDense: true,
-                          hint: Text("जिल्हा निवडा"),
-                          value: selectedDistrict,
-                          items: allDistricts
-                              .map((e) => DropdownMenuItem<String>(
-                                    child: Text(e["label"]),
-                                    value: e["id"],
-                                  ))
-                              .toList(),
-                          onChanged: (value) => setState(() {
-                            selectedTaluka = null;
-                            selectedVillage = null;
-                            availableTalukas.clear();
-                            availableVillages.clear();
-                            selectedDistrict = value;
-                            fetchTalukas(selectedDistrict);
-                          }),
-                          onSaved: ((newValue) => setState(() {
-                                selectedDistrict = newValue;
-                              })),
-                          validator: (value) =>
-                              value == null ? "कृपया जिल्हा निवडा" : null,
+                        SizedBox(
+                          height: 40,
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            labelText: "तालुका",
-                            labelStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.green.shade900,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: RadioListTile(
+                                title: Text("खत व्यवस्थापन व तज्ञ सल्ला"),
+                                value: "/userdetails",
+                                groupValue: nextPage,
+                                onChanged: (value) {
+                                  setState(() {
+                                    nextPage = value.toString();
+                                  });
+                                },
+                                activeColor: Colors.green,
+                              ),
                             ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
+                            Expanded(
+                              child: RadioListTile(
+                                title: Text("विक्री"),
+                                value: "/sellProduct",
+                                groupValue: nextPage,
+                                onChanged: (value) {
+                                  setState(() {
+                                    nextPage = value.toString();
+                                  });
+                                },
+                                activeColor: Colors.green,
+                              ),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.green.shade500, width: 2),
-                            ),
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                          menuMaxHeight: 250,
-                          isExpanded: true,
-                          isDense: true,
-                          hint: Text("तालुका निवडा"),
-                          value: selectedTaluka,
-                          items: availableTalukas
-                              .map((e) => DropdownMenuItem<String>(
-                                    child: Text(e["label"]),
-                                    value: e["id"],
-                                  ))
-                              .toList(),
-                          onChanged: (value) => setState(() {
-                            selectedVillage = null;
-                            availableVillages.clear();
-                            selectedTaluka = value;
-                            fetchVillages(selectedTaluka);
-                          }),
-                          onSaved: ((newValue) => setState(() {
-                                selectedTaluka = newValue;
-                              })),
-                          validator: (value) =>
-                              value == null ? "कृपया तालुका निवडा" : null,
+                          ],
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            labelText: "गाव",
-                            labelStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.green.shade900,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.green.shade500, width: 2),
-                            ),
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                          menuMaxHeight: 250,
-                          isExpanded: true,
-                          isDense: true,
-                          hint: Text("गाव निवडा"),
-                          value: selectedVillage,
-                          items: availableVillages
-                              .map((e) => DropdownMenuItem<String>(
-                                    child: Text(e["label"]),
-                                    value: e["id"],
-                                  ))
-                              .toList(),
-                          onChanged: (value) => setState(() {
-                            selectedVillage = value;
-                          }),
-                          onSaved: ((newValue) => setState(() {
-                                selectedVillage = newValue;
-                              })),
-                          validator: (value) =>
-                              value == null ? "कृपया गाव निवडा" : null,
+                        SizedBox(
+                          height: 10,
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        height: 40,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              FirebaseAllServices.instance.addLocationdata(
-                                  selectedDistrict!,
-                                  selectedTaluka!,
-                                  selectedVillage!,
-                                  nextPage);
-                            } else {
-                              Get.snackbar(
-                                "अवैध माहिती",
-                                "सर्व माहिती अनिवार्य आहे!",
-                                snackPosition: SnackPosition.BOTTOM,
-                                backgroundColor: Colors.red,
-                                isDismissible: true,
-                                dismissDirection: DismissDirection.horizontal,
-                                margin: EdgeInsets.all(15),
-                                forwardAnimationCurve: Curves.easeOutBack,
-                                colorText: Colors.white,
-                              );
-                            }
-                          },
-                          child: Text(
-                            'पुढे जा',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: RadioListTile(
+                                title: Text("खरेदी"),
+                                value: "/buyProduct",
+                                groupValue: nextPage,
+                                onChanged: (value) {
+                                  setState(() {
+                                    nextPage = value.toString();
+                                  });
+                                },
+                                activeColor: Colors.green,
+                              ),
                             ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10))),
+                            Expanded(
+                              child: RadioListTile(
+                                title: Text("शेती सेवा"),
+                                value: "/buyFarmingServices",
+                                groupValue: nextPage,
+                                onChanged: (value) {
+                                  setState(() {
+                                    nextPage = value.toString();
+                                  });
+                                },
+                                activeColor: Colors.green,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          height: 40,
+                        ),
+                        ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButtonFormField(
+                            decoration: InputDecoration(
+                              labelText: "जिल्हा",
+                              labelStyle: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.green.shade900,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Colors.green.shade500, width: 2),
+                              ),
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                            menuMaxHeight: 250,
+                            isExpanded: true,
+                            isDense: true,
+                            hint: Text("जिल्हा निवडा"),
+                            value: selectedDistrict,
+                            items: allDistricts
+                                .map((e) => DropdownMenuItem<String>(
+                                      child: Text(e["label"]),
+                                      value: e["id"],
+                                    ))
+                                .toList(),
+                            onChanged: (value) => setState(() {
+                              selectedTaluka = null;
+                              selectedVillage = null;
+                              availableTalukas.clear();
+                              availableVillages.clear();
+                              selectedDistrict = value;
+                              fetchTalukas(selectedDistrict);
+                            }),
+                            onSaved: ((newValue) => setState(() {
+                                  selectedDistrict = newValue;
+                                })),
+                            validator: (value) =>
+                                value == null ? "कृपया जिल्हा निवडा" : null,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButtonFormField(
+                            decoration: InputDecoration(
+                              labelText: "तालुका",
+                              labelStyle: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.green.shade900,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Colors.green.shade500, width: 2),
+                              ),
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                            menuMaxHeight: 250,
+                            isExpanded: true,
+                            isDense: true,
+                            hint: Text("तालुका निवडा"),
+                            value: selectedTaluka,
+                            items: availableTalukas
+                                .map((e) => DropdownMenuItem<String>(
+                                      child: Text(e["label"]),
+                                      value: e["id"],
+                                    ))
+                                .toList(),
+                            onChanged: (value) => setState(() {
+                              selectedVillage = null;
+                              availableVillages.clear();
+                              selectedTaluka = value;
+                              fetchVillages(selectedTaluka);
+                            }),
+                            onSaved: ((newValue) => setState(() {
+                                  selectedTaluka = newValue;
+                                })),
+                            validator: (value) =>
+                                value == null ? "कृपया तालुका निवडा" : null,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButtonFormField(
+                            decoration: InputDecoration(
+                              labelText: "गाव",
+                              labelStyle: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.green.shade900,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Colors.green.shade500, width: 2),
+                              ),
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                            menuMaxHeight: 250,
+                            isExpanded: true,
+                            isDense: true,
+                            hint: Text("गाव निवडा"),
+                            value: selectedVillage,
+                            items: availableVillages
+                                .map((e) => DropdownMenuItem<String>(
+                                      child: Text(e["label"]),
+                                      value: e["id"],
+                                    ))
+                                .toList(),
+                            onChanged: (value) => setState(() {
+                              selectedVillage = value;
+                            }),
+                            onSaved: ((newValue) => setState(() {
+                                  selectedVillage = newValue;
+                                })),
+                            validator: (value) =>
+                                value == null ? "कृपया गाव निवडा" : null,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Container(
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                FirebaseAllServices.instance.addLocationdata(
+                                    selectedDistrict!,
+                                    selectedTaluka!,
+                                    selectedVillage!,
+                                    nextPage);
+                              } else {
+                                Get.snackbar(
+                                  "अवैध माहिती",
+                                  "सर्व माहिती अनिवार्य आहे!",
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  backgroundColor: Colors.red,
+                                  isDismissible: true,
+                                  dismissDirection: DismissDirection.horizontal,
+                                  margin: EdgeInsets.all(15),
+                                  forwardAnimationCurve: Curves.easeOutBack,
+                                  colorText: Colors.white,
+                                );
+                              }
+                            },
+                            child: Text(
+                              'पुढे जा',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
