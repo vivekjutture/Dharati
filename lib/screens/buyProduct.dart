@@ -10,6 +10,7 @@ class BuyProduct extends StatefulWidget {
 
 class _BuyProductState extends State<BuyProduct> {
   DateTime date = DateTime.now();
+  int available = 0;
   TextEditingController tc = TextEditingController();
   /*bool _valueVillage = true;
   bool _valueTaluka = false;
@@ -226,8 +227,11 @@ class _BuyProductState extends State<BuyProduct> {
                         );
                         if (newDate == null) return;
 
-                        setState(() => tc.text =
-                            '${newDate.year}/${newDate.month}/${newDate.day}');
+                        setState(() {
+                          available = newDate.millisecondsSinceEpoch;
+                          tc.text =
+                              '${newDate.year}/${newDate.month}/${newDate.day}';
+                        });
                       },
                     ),
                   )
@@ -256,7 +260,6 @@ class _BuyProductState extends State<BuyProduct> {
                       title: const Text("गाव पातळी"),
                       activeColor: Colors.green,
                       groupValue: _valueLevel,
-                      secondary: const Icon(Icons.holiday_village),
                       onChanged: (String? value) {
                         setState(() => _valueLevel = value!);
                       },
@@ -268,7 +271,6 @@ class _BuyProductState extends State<BuyProduct> {
                       title: const Text("तालुका पातळी"),
                       activeColor: Colors.green,
                       groupValue: _valueLevel,
-                      secondary: const Icon(Icons.location_city_rounded),
                       onChanged: (String? value) {
                         setState(() => _valueLevel = value!);
                       },
@@ -288,7 +290,6 @@ class _BuyProductState extends State<BuyProduct> {
                       title: const Text("जिल्हा पातळी"),
                       activeColor: Colors.green,
                       groupValue: _valueLevel,
-                      secondary: const Icon(Icons.location_city),
                       onChanged: (String? value) {
                         setState(() => _valueLevel = value!);
                       },
@@ -300,7 +301,6 @@ class _BuyProductState extends State<BuyProduct> {
                       title: const Text("राज्य पातळी"),
                       activeColor: Colors.green,
                       groupValue: _valueLevel,
-                      secondary: const Icon(Icons.area_chart_rounded),
                       onChanged: (String? value) {
                         setState(() => _valueLevel = value!);
                       },
