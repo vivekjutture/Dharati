@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
+import 'package:intl/intl.dart';
 
 class BuyProduct extends StatefulWidget {
   const BuyProduct({super.key});
@@ -12,10 +12,6 @@ class _BuyProductState extends State<BuyProduct> {
   DateTime date = DateTime.now();
   int available = 0;
   TextEditingController tc = TextEditingController();
-  /*bool _valueVillage = true;
-  bool _valueTaluka = false;
-  bool _valueDistrict = false;
-  bool _valueState = false;*/
 
   String? _valueLevel = "गाव पातळी";
   final mainCropType = ['पीक', 'भाजी', 'पशुधन'];
@@ -122,7 +118,7 @@ class _BuyProductState extends State<BuyProduct> {
                           selectedSubType = null;
                           availableSubCropType.clear();
                           selectedMainType = value;
-                          fetchSubCropType(selectedMainType);
+                          fetchSubCropType(selectedMainType.toString());
                         }),
                         onSaved: (newValue) => setState(() {
                           selectedMainType = newValue;
@@ -202,7 +198,7 @@ class _BuyProductState extends State<BuyProduct> {
                     child: TextFormField(
                       controller: tc,
                       decoration: InputDecoration(
-                        icon: Icon(Icons.calendar_today_rounded),
+                        prefixIcon: Icon(Icons.calendar_today_rounded),
                         labelText: "तारीख निवडा",
                         labelStyle: TextStyle(
                           fontSize: 16,
@@ -217,6 +213,7 @@ class _BuyProductState extends State<BuyProduct> {
                               color: Colors.green.shade300, width: 1),
                         ),
                       ),
+                      readOnly: true,
                       onTap: () async {
                         DateTime? newDate = await showDatePicker(
                           context: context,
@@ -228,8 +225,7 @@ class _BuyProductState extends State<BuyProduct> {
 
                         setState(() {
                           available = newDate.millisecondsSinceEpoch;
-                          tc.text =
-                              '${newDate.year}/${newDate.month}/${newDate.day}';
+                          tc.text = DateFormat("dd-MM-yyyy").format(newDate);
                         });
                       },
                     ),

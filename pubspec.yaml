@@ -41,10 +41,8 @@ dependencies:
   firebase_auth: ^4.2.8
   get: ^4.6.5
   cloud_firestore: ^4.4.3
-  http: ^0.13.5
-  internet_connection_checker: ^1.0.0+1
-  connectivity_plus: ^3.0.3
-  calendar_date_picker2: ^0.4.9
+
+  
 
 dev_dependencies:
   flutter_test:
