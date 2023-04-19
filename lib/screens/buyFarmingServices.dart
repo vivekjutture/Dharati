@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dharati/screens/showFarmingServices.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -11,12 +14,13 @@ class BuyFarmingServices extends StatefulWidget {
 
 class _BuyFarmingServicesState extends State<BuyFarmingServices> {
   final _formKey = GlobalKey<FormState>();
+
   TextStyle labelTextStyle = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w700,
     color: Colors.green.shade600,
   );
-
+  List<dynamic> documents = [];
   List<dynamic> seva = [
     {"id": "अवजारे", "label": "अवजारे"},
     {"id": "मनुष्यबळ", "label": "मनुष्यबळ"}
@@ -41,6 +45,7 @@ class _BuyFarmingServicesState extends State<BuyFarmingServices> {
     {"id": "जेसिबी", "label": "जेसिबी", "parentId": "अवजारे"},
     {"id": "हार्वेस्टर", "label": "हार्वेस्टर", "parentId": "अवजारे"},
     {"id": "ट्रॅक्टर फळी", "label": "ट्रॅक्टर फळी", "parentId": "अवजारे"},
+    {"id": "मनुष्यबळ", "label": "मनुष्यबळ", "parentId": "मनुष्यबळ"},
   ];
   final counts = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
   var sevaTypes = [];
@@ -48,10 +53,21 @@ class _BuyFarmingServicesState extends State<BuyFarmingServices> {
   String? selectedSevaType;
   String? count = "1";
   TextEditingController _date = TextEditingController();
-  var dateInMs;
-  String sevaLevel = "village";
+  num dateInMs = 0;
+  String sevaLevel = "Village";
+  String? phoneNumber;
+  var distTalVil = {};
+ 
+
   @override
   Widget build(BuildContext context) {
+    final Map userDetailsMap =
+        ModalRoute.of(context)!.settings.arguments as Map;
+    distTalVil["District"] = userDetailsMap["Dist"].toString();
+    distTalVil["Taluka"] = userDetailsMap["Tal"].toString();
+    distTalVil["Village"] = userDetailsMap["Vil"].toString();
+    distTalVil["State"] = userDetailsMap["State"].toString();
+    phoneNumber = userDetailsMap["PhoneNum"].toString();
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -163,9 +179,7 @@ class _BuyFarmingServicesState extends State<BuyFarmingServices> {
                           hint: Text("सेवा प्रकार"),
                           value: selectedSevaType,
                           validator: (value) =>
-                              (value == null && selectedSeva != "मनुष्यबळ")
-                                  ? "कृपया सेवा प्रकार निवडा"
-                                  : null,
+                              value == null ? "कृपया सेवा प्रकार निवडा" : null,
                           items: sevaTypes
                               .map((e) => DropdownMenuItem<String>(
                                     child: Text(e["label"]),
@@ -303,7 +317,7 @@ class _BuyFarmingServicesState extends State<BuyFarmingServices> {
                     Expanded(
                       child: RadioListTile(
                         title: Text("गाव पातळी"),
-                        value: "village",
+                        value: "Village",
                         groupValue: sevaLevel,
                         onChanged: (value) {
                           setState(() {
@@ -316,7 +330,7 @@ class _BuyFarmingServicesState extends State<BuyFarmingServices> {
                     Expanded(
                       child: RadioListTile(
                         title: Text("तालुका पातळी"),
-                        value: "taluka",
+                        value: "Taluka",
                         groupValue: sevaLevel,
                         onChanged: (value) {
                           setState(() {
@@ -337,7 +351,7 @@ class _BuyFarmingServicesState extends State<BuyFarmingServices> {
                     Expanded(
                       child: RadioListTile(
                         title: Text("जिल्हा पातळी"),
-                        value: "district",
+                        value: "District",
                         groupValue: sevaLevel,
                         onChanged: (value) {
                           setState(() {
@@ -350,7 +364,7 @@ class _BuyFarmingServicesState extends State<BuyFarmingServices> {
                     Expanded(
                       child: RadioListTile(
                         title: Text("राज्य पातळी"),
-                        value: "state",
+                        value: "State",
                         groupValue: sevaLevel,
                         onChanged: (value) {
                           setState(() {
@@ -370,7 +384,8 @@ class _BuyFarmingServicesState extends State<BuyFarmingServices> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        Get.toNamed("/sellFarmingServices");
+                        documents.clear();
+                        fetchFarmingServices(selectedSeva!, selectedSevaType!);
                       } else {
                         Get.snackbar(
                           "अवैध माहिती",
@@ -404,8 +419,8 @@ class _BuyFarmingServicesState extends State<BuyFarmingServices> {
                 ),
                 TextButton(
                     onPressed: () {
-                      Get.offNamed("/sellFarmingServices");
-                      
+                      Get.offNamed("/sellFarmingServices",
+                          arguments: userDetailsMap);
                     },
                     child: Text(
                       'स्वतः ची सेवा नोंद करा',
@@ -420,5 +435,59 @@ class _BuyFarmingServicesState extends State<BuyFarmingServices> {
         ),
       ),
     );
+  }
+
+  void fetchFarmingServices(String seva, String sevaType) {
+    Get.snackbar(
+      "कृपया प्रतिक्षा करा...",
+      "सेवा शोधत आहोत.",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.green,
+      isDismissible: true,
+      dismissDirection: DismissDirection.horizontal,
+      margin: EdgeInsets.all(15),
+      forwardAnimationCurve: Curves.easeOutBack,
+      colorText: Colors.white,
+    );
+    FirebaseFirestore.instance
+        .collectionGroup(seva + sevaType)
+        .get()
+        .then((value) {
+      value.docs.forEach((doc) {
+        var data = doc.data();
+        String phoneNum = data["Phone Number"].toString();
+        String startDate = data["Start Date ms"].toString();
+        String endDate = data["End Date ms"].toString();
+        String level = data["Service Level"].toString();
+        String loc = data[sevaLevel].toString();
+        if (phoneNum != phoneNumber.toString() &&
+            startDate.compareTo(dateInMs.toString()) <= 0 &&
+            endDate.compareTo(dateInMs.toString()) >= 0 &&
+            level == sevaLevel.toString() &&
+            loc == distTalVil[sevaLevel].toString()) {
+          setState(() {
+            documents.add(data);
+          });
+        }
+      });
+    }).whenComplete(() {
+      if (documents.isNotEmpty) {
+        Future.delayed(Duration(seconds: 5), () {
+          Navigator.pushNamed(context, "/showServices", arguments: documents);
+        });
+      } else {
+        Get.snackbar(
+          "तसदीबद्दल क्षमस्व",
+          "सेवा उबलब्ध नाही",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          isDismissible: true,
+          dismissDirection: DismissDirection.horizontal,
+          margin: EdgeInsets.all(15),
+          forwardAnimationCurve: Curves.easeOutBack,
+          colorText: Colors.white,
+        );
+      }
+    });
   }
 }

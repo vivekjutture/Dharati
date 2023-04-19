@@ -6,6 +6,7 @@ import 'package:dharati/screens/chooseService.dart';
 import 'package:dharati/screens/dosageCalculator.dart';
 import 'package:dharati/screens/sellFarmingServices.dart';
 import 'package:dharati/screens/sellProduct.dart';
+import 'package:dharati/screens/showFarmingServices.dart';
 import 'package:dharati/services/FirebaseAllServices.dart';
 import 'package:dharati/screens/userDetails.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -67,6 +68,7 @@ class _DharatiAppState extends State<DharatiApp> {
         '/sellFarmingServices': (context) => const SellFarmingServices(),
         '/chooseService': (context) => const ChooseService(),
         '/checkProduct': (context) => const CheckProduct(),
+        '/showServices':(context) => const FarmingServices(),
       },
     );
   }
