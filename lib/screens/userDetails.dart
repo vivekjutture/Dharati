@@ -97,8 +97,8 @@ class _UserDetailsState extends State<UserDetails> {
 
   @override
   void initState() {
-    getUserData();
     super.initState();
+    getUserData();
   }
 
   @override

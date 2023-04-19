@@ -8,7 +8,6 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 class PhoneNum extends StatefulWidget {
   const PhoneNum({super.key});
   //static String verifyId = "";
-  static String completeNumber = '#';
 
   @override
   State<PhoneNum> createState() => _PhoneNumState();
@@ -16,7 +15,7 @@ class PhoneNum extends StatefulWidget {
 
 class _PhoneNumState extends State<PhoneNum> {
   String countryISOCode = 'IN';
-
+  String completeNumber = '#';
   String number = '#';
   int minLength = 10;
   int maxLength = 10;
@@ -86,7 +85,7 @@ class _PhoneNumState extends State<PhoneNum> {
                 ),
                 onChanged: (phone) {
                   countryISOCode = phone.countryISOCode;
-                  PhoneNum.completeNumber = phone.completeNumber;
+                  completeNumber = phone.completeNumber;
                   number = phone.number;
                   minLength = countries
                       .firstWhere(
@@ -115,7 +114,7 @@ class _PhoneNumState extends State<PhoneNum> {
                     int len = number.length;
                     if (len >= minLength && len <= maxLength) {
                       FirebaseAllServices.instance
-                          .phoneAuthentication(PhoneNum.completeNumber);
+                          .phoneAuthentication(completeNumber);
                     } else {
                       Get.snackbar(
                         "तसदीबद्दल क्षमस्व",

@@ -29,12 +29,28 @@ class _ChooseServiceState extends State<ChooseService> {
   String? selectedDistrict;
   String? selectedTaluka;
   String? selectedVillage;
-
+  String? uID;
+  String? phoneNum;
+  var userDetailsMap = {
+    "PhoneNum": "",
+    "ID": "",
+    "Dist": "",
+    "Tal": "",
+    "Vil": "",
+    "State": ""
+  };
   @override
   void initState() {
+    super.initState();
+    setState(() {
+      uID = user.uid;
+      phoneNum = user.phoneNumber;
+      userDetailsMap["PhoneNum"] = phoneNum.toString();
+      userDetailsMap["ID"] = uID.toString();
+      userDetailsMap["State"] = "महाराष्ट्र";
+    });
     createDistList();
     getUserData();
-    super.initState();
   }
 
   @override
@@ -168,10 +184,15 @@ class _ChooseServiceState extends State<ChooseService> {
                               availableTalukas.clear();
                               availableVillages.clear();
                               selectedDistrict = value;
+                              userDetailsMap["Dist"] =
+                                  selectedDistrict.toString();
+                              
                               fetchTalukas(selectedDistrict);
                             }),
                             onSaved: ((newValue) => setState(() {
                                   selectedDistrict = newValue;
+                                  userDetailsMap["Dist"] =
+                                      selectedDistrict.toString();
                                 })),
                             validator: (value) =>
                                 value == null ? "कृपया जिल्हा निवडा" : null,
@@ -215,10 +236,13 @@ class _ChooseServiceState extends State<ChooseService> {
                               selectedVillage = null;
                               availableVillages.clear();
                               selectedTaluka = value;
+                              userDetailsMap["Tal"] = selectedTaluka.toString();
                               fetchVillages(selectedTaluka);
                             }),
                             onSaved: ((newValue) => setState(() {
                                   selectedTaluka = newValue;
+                                  userDetailsMap["Tal"] =
+                                      selectedTaluka.toString();
                                 })),
                             validator: (value) =>
                                 value == null ? "कृपया तालुका निवडा" : null,
@@ -260,9 +284,13 @@ class _ChooseServiceState extends State<ChooseService> {
                                 .toList(),
                             onChanged: (value) => setState(() {
                               selectedVillage = value;
+                              userDetailsMap["Vil"] =
+                                  selectedVillage.toString();
                             }),
                             onSaved: ((newValue) => setState(() {
                                   selectedVillage = newValue;
+                                  userDetailsMap["Vil"] =
+                                      selectedVillage.toString();
                                 })),
                             validator: (value) =>
                                 value == null ? "कृपया गाव निवडा" : null,
@@ -280,7 +308,8 @@ class _ChooseServiceState extends State<ChooseService> {
                                     selectedDistrict!,
                                     selectedTaluka!,
                                     selectedVillage!,
-                                    nextPage);
+                                    nextPage,
+                                    userDetailsMap);
                               } else {
                                 Get.snackbar(
                                   "अवैध माहिती",
@@ -369,6 +398,10 @@ class _ChooseServiceState extends State<ChooseService> {
         selectedDistrict = data["District"];
         selectedTaluka = data["Taluka"];
         selectedVillage = data["Village"];
+        userDetailsMap["Dist"] = selectedDistrict.toString();
+        userDetailsMap["Tal"] = selectedTaluka.toString();
+        userDetailsMap["Vil"] = selectedVillage.toString();
+        userDetailsMap["State"] = "महाराष्ट्र";
         fetchTalukas(selectedDistrict);
         fetchVillages(selectedTaluka);
       });

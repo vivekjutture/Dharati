@@ -17,6 +17,8 @@ class _OTPVerificationState extends State<OTPVerification> {
 
   @override
   Widget build(BuildContext context) {
+    String completeNumber =
+        ModalRoute.of(context)!.settings.arguments.toString();
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -59,7 +61,7 @@ class _OTPVerificationState extends State<OTPVerification> {
                 height: 10,
               ),
               Text(
-                'या ${PhoneNum.completeNumber} संपर्क क्रमांकाला पाठवलेला ओटीपी टाका',
+                'या $completeNumber संपर्क क्रमांकाला पाठवलेला ओटीपी टाका',
                 style: TextStyle(
                   color: Colors.black54,
                   fontSize: 18,

@@ -104,8 +104,8 @@ class _DosageCalculationState extends State<DosageCalculation> {
 
   @override
   void initState() {
-    clearAll();
     super.initState();
+    clearAll();
   }
 
   @override
