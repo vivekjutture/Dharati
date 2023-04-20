@@ -287,4 +287,72 @@ class FirebaseAllServices extends GetxController {
       );
     });
   }
+
+
+  Future<void> addSellProducts(
+      String mainType,
+      String subType,
+      String sellStartDate,
+      num sellStartDateInMs,
+      String sellEndDate,
+      num sellEndDateInMs,
+      String sellLevel,
+      String dist,
+      String tal,
+      String vil,var userDetails) async {
+    final user = _auth.currentUser!;
+    final id = user.uid;
+    final phoneNo = user.phoneNumber;
+    await db
+        .collection("Products")
+        .doc(id)
+        .collection(mainType + subType)
+        .doc(id)
+        .set(
+      {
+        "ID": id,
+        "Phone Number": phoneNo,
+        "District": dist,
+        "Taluka": tal,
+        "Village": vil,
+        "Main Type": mainType,
+        "Sub Type": subType,
+        "Start Date": sellStartDate,
+        "Start Date ms": sellStartDateInMs,
+        "End Date": sellEndDate,
+        "End Date ms": sellEndDateInMs,
+        "Sell Level": sellLevel,
+        "State":"महाराष्ट्र",
+      },
+    ).then((value) {
+      Get.snackbar(
+        "धन्यवाद",
+        "माहिती यशस्वीरित्या जतन केली आहे!",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        margin: EdgeInsets.all(15),
+        forwardAnimationCurve: Curves.easeOutBack,
+        colorText: Colors.white,
+      );
+      Future.delayed(const Duration(seconds: 5), () {
+        Get.offNamed("/buyFarmingServices",arguments: userDetails);
+      });
+    }).onError((error, stackTrace) {
+      Get.snackbar(
+        "तसदीबद्दल क्षमस्व",
+        error.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        margin: EdgeInsets.all(15),
+        forwardAnimationCurve: Curves.easeOutBack,
+        colorText: Colors.white,
+      );
+    });
+  }
+
+
 }
