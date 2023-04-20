@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:dharati/services/FirebaseAllServices.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class SellProduct extends StatefulWidget {
   const SellProduct({super.key});
@@ -8,56 +13,77 @@ class SellProduct extends StatefulWidget {
 }
 
 class _SellProductState extends State<SellProduct> {
-  DateTime date = DateTime.now();
-  TextEditingController tc = TextEditingController();
-  int availableDate = 0;
-  int availableDate2 = 0;
-
-  DateTime date1 = DateTime.now();
-  TextEditingController tc1 = TextEditingController();
-
-  String? _valueLevel = "गाव पातळी";
-
-  final mainCropType = ['पीक', 'भाजी', 'पशुधन'];
-  var availableSubCropType = [];
-  final subCropType1 = [
-    'गहू',
-    'ज्वारी',
-    'तांदूळ',
-    'मका',
-    'नाचणी',
-    'भुईमूग',
-    'सोयाबीन',
+ String? dist;
+  String? tal;
+  String? vil;
+  String? state;
+  final _formKey = GlobalKey<FormState>();
+  TextStyle labelTextStyle = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+    color: Colors.green.shade600,
+  );
+  List<dynamic> mainType = [
+    {"id": "पीक", "label": "पीक"},
+    {"id": "भाजी", "label": "भाजी"},
+    {"id": "पशुधन", "label": "पशुधन"}
   ];
-  final subCropType2 = [
-    'मेथी',
-    'पोकळा',
-    'करडई',
-    'पालक',
-    'कांदा',
-    'टोमॅटो',
-    'बटाटा',
-    'दोडका',
-    'शेवगा',
-    'पावटा',
-    'गवारी',
-    'वांगी',
-    'काकडी',
-    'गाजर',
-    'मुळा',
-    'कोथिंबीर',
-    'आले',
-    'लसूण',
-    'कारले'
+  List<dynamic> allSubTypes = [
+    {"id": "गहू", "label": "गहू", "parentId": "पीक"},
+    {"id": "ज्वारी", "label": "ज्वारी", "parentId": "पीक"},
+    {"id": "तांदूळ", "label": "तांदूळ", "parentId": "पीक"},
+    {"id": "मका", "label": "मका", "parentId": "पीक"},
+    {"id": "नाचणी", "label": "नाचणी", "parentId": "पीक"},
+    {"id": "भुईमूग", "label": "भुईमूग", "parentId": "पीक"},
+    {"id": "सोयाबीन", "label": "सोयाबीन", "parentId": "पीक"},
+
+    {"id": "मेथी", "label": "मेथी", "parentId": "भाजी"},
+    {"id": "पोकळा", "label": "पोकळा", "parentId": "भाजी"},
+    {"id": "करडई", "label": "करडई", "parentId": "भाजी"},
+    {"id": "पालक", "label": "पालक", "parentId": "भाजी"},
+    {"id": "कांदा", "label": "कांदा", "parentId": "भाजी"},
+    {"id": "टोमॅटो", "label": "टोमॅटो", "parentId": "भाजी"},
+    {"id": "बटाटा", "label": "बटाटा", "parentId": "भाजी"},
+    {"id": "दोडका", "label": "दोडका", "parentId": "भाजी"},
+    {"id": "शेवगा", "label": "शेवगा", "parentId": "भाजी"},
+    {"id": "पावटा", "label": "पावटा", "parentId": "भाजी"},
+    {"id": "गवारी", "label": "गवारी", "parentId": "भाजी"},
+    {"id": "वांगी", "label": "वांगी", "parentId": "भाजी"},
+    {"id": "काकडी", "label": "काकडी", "parentId": "भाजी"},
+    {"id": "गाजर", "label": "गाजर", "parentId": "भाजी"},
+    {"id": "मुळा", "label": "मुळा", "parentId": "भाजी"},
+    {"id": "कोथिंबीर", "label": "कोथिंबीर", "parentId": "भाजी"},
+    {"id": "आले", "label": "आले", "parentId": "भाजी"},
+    {"id": "लसूण", "label": "लसूण", "parentId": "भाजी"},
+    {"id": "कारले", "label": "कारले", "parentId": "भाजी"},
+
+
+    {"id": "गाई", "label": "गाई", "parentId": "पशुधन"},
+    {"id": "म्हशी", "label": "म्हशी", "parentId": "पशुधन"},
+    {"id": "शेळ्या", "label": "शेळ्या", "parentId": "पशुधन"},
+    {"id": "डुकरे", "label": "डुकरे", "parentId": "पशुधन"}
   ];
-  final subCropType3 = ['गाई', 'म्हशी', 'शेळ्या', 'डुकरे'];
-  //final today = DateUtils.dateOnly(DateTime.now());
-  String? selectedSubType = 'गहू';
-  String? selectedMainType = 'पीक';
-  String? selectedSellDate = " ";
+ // final counts = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+  var cropTypes = [];
+  String? selectedMainType;
+  String? selectedSubType;
+  //String? count = "1";
+  TextEditingController _startDate = TextEditingController();
+  TextEditingController _endDate = TextEditingController();
+  var dateStartInMs;
+  var dateEndInMs;
+  String? phoneNum;
+  String sellLevel = "Village";
+  DateTime dateTimeEnd = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
+    final Map userDetails = ModalRoute.of(context)!.settings.arguments as Map;
+    dist = userDetails["Dist"].toString();
+    tal = userDetails["Tal"].toString();
+    vil = userDetails["Vil"].toString();
+    state = userDetails["State"].toString();
+    phoneNum = userDetails["PhoneNum"].toString();
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -72,33 +98,140 @@ class _SellProductState extends State<SellProduct> {
         centerTitle: true,
         backgroundColor: Colors.green,
       ),
-    body: SingleChildScrollView(
-          child: Container(
-        padding: EdgeInsets.all(25.0),
-        child: Form(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(25.0),
+          child: Form(
+            key: _formKey,
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-              Row(
-                children: [
-                  Text(
-                    'मुख्य प्रकार',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    width: 30,
-                  ),
-                  ButtonTheme(
-                    alignedDropdown: true,
-                    child: Expanded(
-                      child: DropdownButtonFormField(
-                        decoration: InputDecoration(
-                          labelText: "मुख्य प्रकार",
-                          labelStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.green.shade900,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "मुख्य प्रकार",
+                        style: labelTextStyle,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    ButtonTheme(
+                      alignedDropdown: true,
+                      child: Expanded(
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                  color: Colors.green.shade300, width: 1),
+                            ),
                           ),
+                          borderRadius: BorderRadius.circular(5),
+                          menuMaxHeight: 250,
+                          isExpanded: true,
+                          isDense: true,
+                          hint: Text("मुख्य प्रकार"),
+                          value: selectedMainType,
+                          validator: (value) =>
+                              value == null ? "कृपया मुख्य प्रकार निवडा" : null,
+                          items: mainType
+                              .map((e) => DropdownMenuItem<String>(
+                                    child: Text(e["label"]),
+                                    value: e["id"],
+                                  ))
+                              .toList(),
+                          onChanged: (value) => setState(() {
+                            selectedMainType = null;
+                            cropTypes.clear();
+                            selectedMainType = value;
+                            cropTypes = allSubTypes
+                                .where((element) =>
+                                    element["parentId"] == selectedMainType)
+                                .toList();
+                          }),
+                          onSaved: (newValue) => setState(() {
+                            selectedMainType = newValue;
+                          }),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "उप प्रकार",
+                        style: labelTextStyle,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    ButtonTheme(
+                      alignedDropdown: true,
+                      child: Expanded(
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                  color: Colors.green.shade300, width: 1),
+                            ),
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                          menuMaxHeight: 250,
+                          isExpanded: true,
+                          isDense: true,
+                          hint: Text("उप प्रकार"),
+                          value: selectedSubType,
+                          validator: (value) =>
+                              value == null ? "कृपया उप प्रकार निवडा" : null,
+                          items: cropTypes
+                              .map((e) => DropdownMenuItem<String>(
+                                    child: Text(e["label"]),
+                                    value: e["id"],
+                                  ))
+                              .toList(),
+                          onChanged: (value) => setState(() {
+                            selectedSubType = value;
+                          }),
+                          onSaved: (newValue) => setState(() {
+                            selectedSubType = newValue;
+                          }),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "विक्री कालावधी पासून",
+                        style: labelTextStyle,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _startDate,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.calendar_month_rounded),
+                          hintText: "दिवस निवडा",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                           ),
@@ -108,54 +241,52 @@ class _SellProductState extends State<SellProduct> {
                                 color: Colors.green.shade300, width: 1),
                           ),
                         ),
-                        borderRadius: BorderRadius.circular(5),
-                        menuMaxHeight: 250,
-                        value: selectedMainType,
+                        readOnly: true,
+                        onTap: () async {
+                          DateTime? selectedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime.now().add(
+                              const Duration(days: 730),
+                            ),
+                          );
+                          if (selectedDate != null) {
+                            setState(() {
+                              dateTimeEnd =
+                                  selectedDate.add(const Duration(days: 1));
+                              _startDate.text =
+                                  DateFormat("dd-MM-yyyy").format(selectedDate);
+                              dateStartInMs =
+                                  selectedDate.millisecondsSinceEpoch;
+                            });
+                          }
+                        },
                         validator: (value) =>
-                            value == "0" ? "कृपया मुख्य प्रकार निवडा" : null,
-                        items: mainCropType
-                            .map((e) => DropdownMenuItem(
-                                  child: Text(e),
-                                  value: e,
-                                ))
-                            .toList(),
-                        onChanged: (value) => setState(() {
-                          selectedSubType = null;
-                          availableSubCropType.clear();
-                          selectedMainType = value;
-                          fetchSubCropType(selectedMainType);
-                        }),
-                        onSaved: (newValue) => setState(() {
-                          selectedMainType = newValue;
-                        }),
+                            _startDate.text == "" ? "कृपया दिवस निवडा" : null,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Text(
-                    'उप प्रकार',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    width: 40,
-                  ),
-                  ButtonTheme(
-                    alignedDropdown: true,
-                    child: Expanded(
-                      child: DropdownButtonFormField(
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "विक्री कालावधी पर्यंत",
+                        style: labelTextStyle,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _endDate,
                         decoration: InputDecoration(
-                          labelText: "उप प्रकार",
-                          labelStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.green.shade900,
-                          ),
+                          prefixIcon: Icon(Icons.calendar_month_rounded),
+                          hintText: "दिवस निवडा",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                           ),
@@ -165,222 +296,158 @@ class _SellProductState extends State<SellProduct> {
                                 color: Colors.green.shade300, width: 1),
                           ),
                         ),
-                        borderRadius: BorderRadius.circular(5),
-                        menuMaxHeight: 250,
-                        value: selectedSubType,
+                        readOnly: true,
+                        onTap: () async {
+                          DateTime? selectedDate = await showDatePicker(
+                            context: context,
+                            initialDate: dateTimeEnd,
+                            firstDate: dateTimeEnd,
+                            lastDate: dateTimeEnd.add(
+                              const Duration(days: 730),
+                            ),
+                          );
+                          if (selectedDate != null) {
+                            setState(() {
+                              _endDate.text =
+                                  DateFormat("dd-MM-yyyy").format(selectedDate);
+                              dateEndInMs = selectedDate.millisecondsSinceEpoch;
+                            });
+                          }
+                        },
                         validator: (value) =>
-                            value == "0" ? "कृपया उप प्रकार निवडा" : null,
-                        items: availableSubCropType
-                            .map((e) => DropdownMenuItem(
-                                  child: Text(e),
-                                  value: e,
-                                ))
-                            .toList(),
-                        onChanged: (value) => setState(() {
-                          selectedSubType = value as String?;
-                        }),
-                        onSaved: (newValue) => setState(() {
-                          selectedSubType = newValue as String?;
-                        }),
+                            _endDate.text == "" ? "कृपया दिवस निवडा" : null,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Text(
-                    "विक्री कालावधी ",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    width: 40,
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      controller: tc,
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.calendar_today_rounded),
-                        labelText: "पासून ",
-                        labelStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                              color: Colors.green.shade300, width: 1),
-                        ),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  'विक्री परिसर',
+                  style: labelTextStyle,
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: RadioListTile(
+                        title: Text("गाव पातळी"),
+                        value: "Village",
+                        groupValue: sellLevel,
+                        onChanged: (value) {
+                          setState(() {
+                            sellLevel = value.toString();
+                          });
+                        },
+                        activeColor: Colors.green,
                       ),
-                      onTap: () async {
-                        DateTime? newDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(2025),
+                    ),
+                    Expanded(
+                      child: RadioListTile(
+                        title: Text("तालुका पातळी"),
+                        value: "Taluka",
+                        groupValue: sellLevel,
+                        onChanged: (value) {
+                          setState(() {
+                            sellLevel = value.toString();
+                          });
+                        },
+                        activeColor: Colors.green,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: RadioListTile(
+                        title: Text("जिल्हा पातळी"),
+                        value: "District",
+                        groupValue: sellLevel,
+                        onChanged: (value) {
+                          setState(() {
+                            sellLevel = value.toString();
+                          });
+                        },
+                        activeColor: Colors.green,
+                      ),
+                    ),
+                    Expanded(
+                      child: RadioListTile(
+                        title: Text("राज्य पातळी"),
+                        value: "State",
+                        groupValue: sellLevel,
+                        onChanged: (value) {
+                          setState(() {
+                            sellLevel = value.toString();
+                          });
+                        },
+                        activeColor: Colors.green,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        FirebaseAllServices.instance.addSellProducts(
+                            selectedMainType!,
+                            selectedSubType!,
+                            _startDate.text,
+                            dateStartInMs!,
+                            _endDate.text,
+                            dateEndInMs!,
+                            sellLevel,
+                            dist!,
+                            tal!,
+                            vil!,
+                            userDetails);
+                      } else {
+                        Get.snackbar(
+                          "अवैध माहिती",
+                          "सर्व माहिती अनिवार्य आहे!",
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.red,
+                          isDismissible: true,
+                          dismissDirection: DismissDirection.horizontal,
+                          margin: EdgeInsets.all(15),
+                          forwardAnimationCurve: Curves.easeOutBack,
+                          colorText: Colors.white,
                         );
-                        if (newDate == null) return;
-
-                        setState(() {
-                          availableDate = newDate.millisecondsSinceEpoch;
-                          tc.text =
-                              '${newDate.year}/${newDate.month}/${newDate.day}';
-                        });
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    width: 30,
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      controller: tc1,
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.calendar_today_rounded),
-                        labelText: "पर्यंत ",
-                        labelStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                              color: Colors.green.shade300, width: 1),
-                        ),
+                      }
+                    },
+                    child: Text(
+                      'नोंद करा',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                      onTap: () async {
-                        DateTime? newDate1 = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(2025),
-                        );
-                        if (newDate1 == null) return;
-
-                         setState(() {
-                          availableDate2 = newDate1.millisecondsSinceEpoch;
-                          tc1.text =
-                              '${newDate1.year}/${newDate1.month}/${newDate1.day}';
-                        });
-                      },
                     ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "विक्री परिसर",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: RadioListTile(
-                      value: "गाव पातळी",
-                      title: const Text("गाव पातळी"),
-                      activeColor: Colors.green,
-                      groupValue: _valueLevel,
-                      secondary: const Icon(Icons.holiday_village),
-                      onChanged: (String? value) {
-                        setState(() => _valueLevel = value!);
-                      },
-                    ),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))),
                   ),
-                  Expanded(
-                    child: RadioListTile(
-                      value: "तालुका पातळी",
-                      title: const Text("तालुका पातळी"),
-                      activeColor: Colors.green,
-                      groupValue: _valueLevel,
-                      secondary: const Icon(Icons.location_city_rounded),
-                      onChanged: (String? value) {
-                        setState(() => _valueLevel = value!);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: RadioListTile(
-                      value: "जिल्हा पातळी",
-                      title: const Text("जिल्हा पातळी"),
-                      activeColor: Colors.green,
-                      groupValue: _valueLevel,
-                      secondary: const Icon(Icons.location_city),
-                      onChanged: (String? value) {
-                        setState(() => _valueLevel = value!);
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: RadioListTile(
-                      value: "राज्य पातळी",
-                      title: const Text("राज्य पातळी"),
-                      activeColor: Colors.green,
-                      groupValue: _valueLevel,
-                      secondary: const Icon(Icons.area_chart_rounded),
-                      onChanged: (String? value) {
-                        setState(() => _valueLevel = value!);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
-                          minimumSize: Size(40, 50) // Background color
-                          ),
-                      child: Text("नोंद करा"))
-                ],
-              )
-            ])),
-      )),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
-
-  fetchSubCropType(String? mainCrop) {
-    setState(() {
-      if (mainCrop == 'पीक') {
-        availableSubCropType = subCropType1;
-      } else if (mainCrop == 'भाजी') {
-        availableSubCropType = subCropType2;
-      } else if (mainCrop == 'पशुधन') {
-        availableSubCropType = subCropType3;
-      }
-    });
-  }
 }
-
