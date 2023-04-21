@@ -1,5 +1,6 @@
+import 'package:dharati/widgets/ProductService.dart';
 import 'package:flutter/widgets.dart';
-
+import 'package:dharati/widgets/FarmService.dart';
 import 'package:flutter/material.dart';
 
 class CheckProduct extends StatefulWidget {
@@ -10,6 +11,8 @@ class CheckProduct extends StatefulWidget {
 class _CheckProductState extends State<CheckProduct> {
   @override
   Widget build(BuildContext context) {
+    final List<dynamic> documents =
+        ModalRoute.of(context)!.settings.arguments as List;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -23,6 +26,14 @@ class _CheckProductState extends State<CheckProduct> {
         ),
         centerTitle: true,
         backgroundColor: Colors.green,
+      ),
+      body: SafeArea(
+        child: ListView.builder(
+          itemCount: documents.length,
+          itemBuilder: (context, index) {
+            return ProductService(documents[index]);
+          },
+        ),
       ),
     );
   }
