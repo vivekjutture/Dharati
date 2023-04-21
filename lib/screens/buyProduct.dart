@@ -334,6 +334,7 @@ class _BuyProductState extends State<BuyProduct> {
                       ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
+                              documents.clear();
                               fetchBuyProductServices(
                                   selectedMainType!, selectedSubType!);
                             } else {
