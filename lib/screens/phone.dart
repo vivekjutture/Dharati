@@ -1,4 +1,3 @@
-
 import 'package:dharati/services/FirebaseAllServices.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,11 +5,9 @@ import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
-
 class PhoneNum extends StatefulWidget {
   const PhoneNum({super.key});
   //static String verifyId = "";
-  static String completeNumber = '#';
 
   @override
   State<PhoneNum> createState() => _PhoneNumState();
@@ -18,12 +15,10 @@ class PhoneNum extends StatefulWidget {
 
 class _PhoneNumState extends State<PhoneNum> {
   String countryISOCode = 'IN';
-
+  String completeNumber = '#';
   String number = '#';
   int minLength = 10;
   int maxLength = 10;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +39,7 @@ class _PhoneNumState extends State<PhoneNum> {
                 height: 5,
               ),
               Text(
-                'Phone Verification',
+                'संपर्क क्रमांक पडताळणी',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -55,7 +50,7 @@ class _PhoneNumState extends State<PhoneNum> {
                 height: 10,
               ),
               Text(
-                'Enter Your Mobile Number',
+                'तुमचा संपर्क क्रमांक टाका',
                 style: TextStyle(
                   color: Colors.black54,
                   fontSize: 18,
@@ -67,7 +62,7 @@ class _PhoneNumState extends State<PhoneNum> {
               ),
               IntlPhoneField(
                 decoration: InputDecoration(
-                  hintText: 'Phone Number',
+                  hintText: 'संपर्क क्रमांक',
                   hintStyle: TextStyle(
                     color: Colors.grey,
                     fontSize: 18,
@@ -79,6 +74,7 @@ class _PhoneNumState extends State<PhoneNum> {
                   fontSize: 18,
                   fontWeight: FontWeight.w300,
                 ),
+                invalidNumberMessage: "अवैध संपर्क क्रमांक",
                 initialCountryCode: countryISOCode,
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly,
@@ -89,7 +85,7 @@ class _PhoneNumState extends State<PhoneNum> {
                 ),
                 onChanged: (phone) {
                   countryISOCode = phone.countryISOCode;
-                  PhoneNum.completeNumber = phone.completeNumber;
+                  completeNumber = phone.completeNumber;
                   number = phone.number;
                   minLength = countries
                       .firstWhere(
@@ -117,46 +113,12 @@ class _PhoneNumState extends State<PhoneNum> {
                   onPressed: () {
                     int len = number.length;
                     if (len >= minLength && len <= maxLength) {
-                      /*try {
-                        final FirebaseAuth auth = FirebaseAuth.instance;
-                        if (kIsWeb) {
-                          await auth.verifyPhoneNumber(
-                              verificationCompleted: verificationCompleted,
-                              verificationFailed: verificationFailed,
-                              codeSent: codeSent,
-                              codeAutoRetrievalTimeout:
-                                  codeAutoRetrievalTimeout);
-                        }
-                        await auth.verifyPhoneNumber(
-                          phoneNumber: completeNumber,
-                          verificationCompleted:
-                              (PhoneAuthCredential credential) async {
-                            await auth.signInWithCredential(credential);
-                          },
-                          verificationFailed: (FirebaseAuthException e) {
-                            showSnackBar(context, e.message!);
-                          },
-                          codeSent: (String verificationId, int? resendToken) {
-                            PhoneNum.verifyId = verificationId;
-                            Navigator.pushNamed(context, "otp");
-                          },
-                          codeAutoRetrievalTimeout: (String verificationId) {
-                            PhoneNum.verifyId = verificationId;
-                          },
-                          timeout: const Duration(seconds: 60),
-                        );
-                      } on FirebaseAuthException catch (e) {
-                        showSnackBar(context, e.message!);
-                      } catch (e) {
-                        showSnackBar(context, "OTP Faild");
-                      }*/
                       FirebaseAllServices.instance
-                          .phoneAuthentication(PhoneNum.completeNumber);
-                      //Navigator.pushNamed(context, "/otp");
+                          .phoneAuthentication(completeNumber);
                     } else {
                       Get.snackbar(
-                        "Error",
-                        "Invalid Number",
+                        "तसदीबद्दल क्षमस्व",
+                        "अवैध क्रमांक",
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: Colors.red,
                         isDismissible: true,
@@ -168,7 +130,7 @@ class _PhoneNumState extends State<PhoneNum> {
                     }
                   },
                   child: Text(
-                    'Send the OTP',
+                    'ओटीपी पाठवा',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 19,

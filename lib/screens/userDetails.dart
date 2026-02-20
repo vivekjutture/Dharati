@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 
 class UserDetails extends StatefulWidget {
   const UserDetails({super.key});
@@ -71,26 +70,22 @@ class _UserDetailsState extends State<UserDetails> {
     "40"
   ];
 
-  final mainCrops = ["Sugarcane"];
+  final mainCrops = ["ऊस"];
 
   final internalCrops = [
-    "Groundnut",
-    "Jowar",
-    "Onion",
-    "Soyabean",
-    "Vegetables",
-    "Wheat"
+    "भुईमूग",
+    "ज्वारी",
+    "कांदा",
+    "सोयाबीन",
+    "भाजीपाला",
+    "गहू"
   ];
 
-  final irrigationTypes = ["Drip", "Traditional"];
+  final irrigationTypes = ["ठिबक", "पारंपारिक"];
 
-  final irrigationSources = ["Borewell", "River", "Well"];
+  final irrigationSources = ["बोअरवेल", "नदी", "विहीर"];
 
-  List<dynamic> allDistricts = [];
-  List<dynamic> allTalukas = [];
-  var availableTalukas = [];
-  List<dynamic> allVillages = [];
-  var availableVillages = [];
+  final fertilizerTypes = ["सेंद्रिय", "रासायनिक"];
 
   String? selectedAcre = "0";
   String? selectedGuntha = "0";
@@ -98,15 +93,12 @@ class _UserDetailsState extends State<UserDetails> {
   String? selectedInternalCrop;
   String? selectedInrrigationType;
   String? selectedInrrigationSource;
-  String? selectedDistrict;
-  String? selectedTaluka;
-  String? selectedVillage;
+  String? seletedFertilizerType;
 
   @override
   void initState() {
-    createDistList();
-    getUserData();
     super.initState();
+    getUserData();
   }
 
   @override
@@ -116,7 +108,7 @@ class _UserDetailsState extends State<UserDetails> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          "Welcome to Dharati",
+          "सुस्वागतम",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
@@ -139,7 +131,7 @@ class _UserDetailsState extends State<UserDetails> {
                       Container(
                         child: InputDecorator(
                           decoration: InputDecoration(
-                            labelText: "Total Agri Land",
+                            labelText: "एकूण शेतजमीन",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -159,7 +151,7 @@ class _UserDetailsState extends State<UserDetails> {
                                   child: Expanded(
                                     child: DropdownButtonFormField(
                                       decoration: InputDecoration(
-                                        labelText: "Acre",
+                                        labelText: "एकर",
                                         labelStyle: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w900,
@@ -179,10 +171,11 @@ class _UserDetailsState extends State<UserDetails> {
                                       ),
                                       borderRadius: BorderRadius.circular(5),
                                       menuMaxHeight: 250,
+                                      hint: Text("एकर"),
                                       value: selectedAcre,
                                       validator: (value) => (value == "0" &&
                                               selectedGuntha == "0")
-                                          ? "Please Select Acre"
+                                          ? "कृपया एकर निवडा"
                                           : null,
                                       items: _acres
                                           .map((e) => DropdownMenuItem(
@@ -209,7 +202,7 @@ class _UserDetailsState extends State<UserDetails> {
                                   child: Expanded(
                                     child: DropdownButtonFormField(
                                       decoration: InputDecoration(
-                                        labelText: "Guntha",
+                                        labelText: "गुंठा",
                                         floatingLabelAlignment:
                                             FloatingLabelAlignment.start,
                                         labelStyle: TextStyle(
@@ -231,10 +224,11 @@ class _UserDetailsState extends State<UserDetails> {
                                       ),
                                       borderRadius: BorderRadius.circular(5),
                                       menuMaxHeight: 250,
+                                      hint: Text("गुंठा"),
                                       value: selectedGuntha,
                                       validator: (value) =>
                                           (value == "0" && selectedAcre == "0")
-                                              ? "Please Select Guntha"
+                                              ? "कृपया गुंठा निवडा"
                                               : null,
                                       items: _gunthas
                                           .map((e) => DropdownMenuItem(
@@ -263,7 +257,7 @@ class _UserDetailsState extends State<UserDetails> {
                         alignedDropdown: true,
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(
-                            labelText: "Main Crop",
+                            labelText: "मुख्य पीक",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
@@ -282,7 +276,7 @@ class _UserDetailsState extends State<UserDetails> {
                           menuMaxHeight: 250,
                           isExpanded: true,
                           isDense: true,
-                          hint: Text("Select Main Crop"),
+                          hint: Text("मुख्य पीक निवडा"),
                           value: selectedMainCrop,
                           items: mainCrops
                               .map((e) => DropdownMenuItem(
@@ -297,7 +291,7 @@ class _UserDetailsState extends State<UserDetails> {
                                 selectedMainCrop = newValue;
                               })),
                           validator: (value) =>
-                              value == null ? "Please Select Main Crop" : null,
+                              value == null ? "कृपया मुख्य पीक निवडा" : null,
                         ),
                       ),
                       SizedBox(
@@ -307,7 +301,7 @@ class _UserDetailsState extends State<UserDetails> {
                         alignedDropdown: true,
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(
-                            labelText: "Internal Crop",
+                            labelText: "अंतर्गत पीक",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
@@ -326,7 +320,7 @@ class _UserDetailsState extends State<UserDetails> {
                           menuMaxHeight: 250,
                           isExpanded: true,
                           isDense: true,
-                          hint: Text("Select Internal Crop"),
+                          hint: Text("अंतर्गत पीक निवडा"),
                           value: selectedInternalCrop,
                           items: internalCrops
                               .map((e) => DropdownMenuItem<String>(
@@ -340,9 +334,8 @@ class _UserDetailsState extends State<UserDetails> {
                           onSaved: ((newValue) => setState(() {
                                 selectedInternalCrop = newValue;
                               })),
-                          validator: (value) => value == null
-                              ? "Please Select Internal Crop"
-                              : null,
+                          validator: (value) =>
+                              value == null ? "कृपया अंतर्गत पीक निवडा" : null,
                         ),
                       ),
                       SizedBox(
@@ -352,7 +345,7 @@ class _UserDetailsState extends State<UserDetails> {
                         alignedDropdown: true,
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(
-                            labelText: "Irrigation Type",
+                            labelText: "सिंचन प्रकार",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
@@ -371,7 +364,7 @@ class _UserDetailsState extends State<UserDetails> {
                           menuMaxHeight: 250,
                           isExpanded: true,
                           isDense: true,
-                          hint: Text("Select Irrigation Type"),
+                          hint: Text("सिंचन प्रकार निवडा"),
                           value: selectedInrrigationType,
                           items: irrigationTypes
                               .map((e) => DropdownMenuItem<String>(
@@ -385,9 +378,8 @@ class _UserDetailsState extends State<UserDetails> {
                           onSaved: ((newValue) => setState(() {
                                 selectedInrrigationType = newValue;
                               })),
-                          validator: (value) => value == null
-                              ? "Please Select Irrigation Type"
-                              : null,
+                          validator: (value) =>
+                              value == null ? "कृपया सिंचन प्रकार निवडा" : null,
                         ),
                       ),
                       SizedBox(
@@ -397,7 +389,7 @@ class _UserDetailsState extends State<UserDetails> {
                         alignedDropdown: true,
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(
-                            labelText: "Irrigation Source",
+                            labelText: "सिंचन स्त्रोत",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
@@ -416,7 +408,7 @@ class _UserDetailsState extends State<UserDetails> {
                           menuMaxHeight: 250,
                           isExpanded: true,
                           isDense: true,
-                          hint: Text("Select Irrigation Source"),
+                          hint: Text("सिंचन स्त्रोत निवडा"),
                           value: selectedInrrigationSource,
                           items: irrigationSources
                               .map((e) => DropdownMenuItem<String>(
@@ -431,7 +423,7 @@ class _UserDetailsState extends State<UserDetails> {
                                 selectedInrrigationSource = newValue;
                               })),
                           validator: (value) => value == null
-                              ? "Please Select Irrigation Source"
+                              ? "कृपया सिंचन स्त्रोत निवडा"
                               : null,
                         ),
                       ),
@@ -442,7 +434,7 @@ class _UserDetailsState extends State<UserDetails> {
                         alignedDropdown: true,
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(
-                            labelText: "District",
+                            labelText: "खत प्रकार",
                             labelStyle: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
@@ -461,118 +453,22 @@ class _UserDetailsState extends State<UserDetails> {
                           menuMaxHeight: 250,
                           isExpanded: true,
                           isDense: true,
-                          hint: Text("Select District"),
-                          value: selectedDistrict,
-                          items: allDistricts
+                          hint: Text("खत प्रकार निवडा"),
+                          value: seletedFertilizerType,
+                          items: fertilizerTypes
                               .map((e) => DropdownMenuItem<String>(
-                                    child: Text(e["label"]),
-                                    value: e["id"],
+                                    child: Text(e),
+                                    value: e,
                                   ))
                               .toList(),
                           onChanged: (value) => setState(() {
-                            selectedTaluka = null;
-                            selectedVillage = null;
-                            availableTalukas.clear();
-                            availableVillages.clear();
-                            selectedDistrict = value;
-                            fetchTalukas(selectedDistrict);
+                            seletedFertilizerType = value;
                           }),
                           onSaved: ((newValue) => setState(() {
-                                selectedDistrict = newValue;
+                                seletedFertilizerType = newValue;
                               })),
                           validator: (value) =>
-                              value == null ? "Please Select District" : null,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            labelText: "Taluka",
-                            labelStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.green.shade900,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.green.shade500, width: 2),
-                            ),
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                          menuMaxHeight: 250,
-                          isExpanded: true,
-                          isDense: true,
-                          hint: Text("Select Taluka"),
-                          value: selectedTaluka,
-                          items: availableTalukas
-                              .map((e) => DropdownMenuItem<String>(
-                                    child: Text(e["label"]),
-                                    value: e["id"],
-                                  ))
-                              .toList(),
-                          onChanged: (value) => setState(() {
-                            selectedVillage = null;
-                            availableVillages.clear();
-                            selectedTaluka = value;
-                            fetchVillages(selectedTaluka);
-                          }),
-                          onSaved: ((newValue) => setState(() {
-                                selectedTaluka = newValue;
-                              })),
-                          validator: (value) =>
-                              value == null ? "Please Select Taluka" : null,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            labelText: "Village",
-                            labelStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.green.shade900,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.green.shade500, width: 2),
-                            ),
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                          menuMaxHeight: 250,
-                          isExpanded: true,
-                          isDense: true,
-                          hint: Text("Select Village"),
-                          value: selectedVillage,
-                          items: availableVillages
-                              .map((e) => DropdownMenuItem<String>(
-                                    child: Text(e["label"]),
-                                    value: e["id"],
-                                  ))
-                              .toList(),
-                          onChanged: (value) => setState(() {
-                            selectedVillage = value;
-                          }),
-                          onSaved: ((newValue) => setState(() {
-                                selectedVillage = newValue;
-                              })),
-                          validator: (value) =>
-                              value == null ? "Please Select Village" : null,
+                              value == null ? "कृपया खत प्रकार निवडा" : null,
                         ),
                       ),
                       SizedBox(
@@ -590,13 +486,11 @@ class _UserDetailsState extends State<UserDetails> {
                                   selectedInternalCrop!,
                                   selectedInrrigationType!,
                                   selectedInrrigationSource!,
-                                  selectedDistrict!,
-                                  selectedTaluka!,
-                                  selectedVillage!);
+                                  seletedFertilizerType!);
                             } else {
                               Get.snackbar(
-                                "Invalid Data",
-                                "All Fields are Mandatory",
+                                "अवैध माहिती",
+                                "सर्व माहिती अनिवार्य आहे!",
                                 snackPosition: SnackPosition.BOTTOM,
                                 backgroundColor: Colors.red,
                                 isDismissible: true,
@@ -608,7 +502,7 @@ class _UserDetailsState extends State<UserDetails> {
                             }
                           },
                           child: Text(
-                            'Update and Save',
+                            'जतन करा',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -629,67 +523,9 @@ class _UserDetailsState extends State<UserDetails> {
     );
   }
 
-  Future<void> createDistList() async {
-    /*final districtsURL = "https://jsonkeeper.com/b/Y44B";
-    final talukasURL =
-        "https://drive.google.com/file/d/1PayUcxOF9cf1Z8JYibIG4fBGdkv9XGf4/view?usp=share_link";
-    final villagesURL =
-        "https://drive.google.com/file/d/1Cs0L6eKeUG2UNugQ1H_ARRtCT5e_PRKU/view?usp=share_link";*/
-    /*try {
-      var jsonDistrictsData = await http.get(Uri.parse(districtsURL));
-      if (jsonDistrictsData.statusCode == 200) {
-        List<dynamic> districtsList =
-            await json.decode(jsonDistrictsData.body) as List<dynamic>;
-        setState(() {
-          allDistricts = districtsList;
-        });
-        print("okay");
-      }
-    } catch (e) {
-      print(e.toString());
-    }*/
-    final jsonDistrictsData =
-        await rootBundle.loadString("assets/JSON Files/Districts.json");
-    List<dynamic> districtsList =
-        json.decode(jsonDistrictsData) as List<dynamic>;
-    setState(() {
-      allDistricts = districtsList;
-    });
-    final jsonTalukasData =
-        await rootBundle.loadString("assets/JSON Files/Talukas.json");
-    List<dynamic> talukasList =
-        await json.decode(jsonTalukasData) as List<dynamic>;
-    setState(() {
-      allTalukas = talukasList;
-    });
-    final jsonVillagesData =
-        await rootBundle.loadString("assets/JSON Files/Villages.json");
-    List<dynamic> villagesList =
-        await json.decode(jsonVillagesData) as List<dynamic>;
-    setState(() {
-      allVillages = villagesList;
-    });
-  }
-
-  fetchTalukas(String? district) {
-    setState(() {
-      availableTalukas = allTalukas
-          .where((element) => element["parentId"] == district)
-          .toList();
-    });
-  }
-
-  fetchVillages(String? taluka) {
-    setState(() {
-      availableVillages = allVillages
-          .where((element) => element["parentId"] == taluka)
-          .toList();
-    });
-  }
-
   Future<void> getUserData() async {
     var document = await FirebaseFirestore.instance
-        .collection("Users")
+        .collection("New Users")
         .doc(user.uid)
         .get();
     if (document.exists) {
@@ -701,11 +537,7 @@ class _UserDetailsState extends State<UserDetails> {
         selectedInternalCrop = data["Internal Crop"];
         selectedInrrigationType = data["Irrigation Type"];
         selectedInrrigationSource = data["Irrigation Source"];
-        selectedDistrict = data["District"];
-        selectedTaluka = data["Taluka"];
-        selectedVillage = data["Village"];
-        fetchTalukas(selectedDistrict);
-        fetchVillages(selectedTaluka);
+        seletedFertilizerType = data["Fertilizer Type"];
       });
       Future.delayed(Duration(seconds: 7), () {
         setState(() {

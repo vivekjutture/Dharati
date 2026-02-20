@@ -2,6 +2,7 @@
 
 An opinionated, user-friendly Flutter app for agricultural assistance — phone auth, dosage calculation, crop management and marketplace services like buy and sell services, crops etc.
 
+
 **Status:** v1.0.0 — Completed ✅
 
 **Main features**

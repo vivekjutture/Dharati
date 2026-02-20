@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 class FirebaseAllServices extends GetxController {
   static FirebaseAllServices get instance => Get.find();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final db = FirebaseFirestore.instance;
 
   var verifyId = ''.obs;
 
@@ -18,7 +19,7 @@ class FirebaseAllServices extends GetxController {
         },
         verificationFailed: (FirebaseAuthException e) {
           Get.snackbar(
-            "Error",
+            "तसदीबद्दल क्षमस्व",
             e.message!,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
@@ -31,7 +32,7 @@ class FirebaseAllServices extends GetxController {
         },
         codeSent: (verificationId, resendToken) {
           this.verifyId.value = verificationId;
-          Get.toNamed("/otp");
+          Get.toNamed("/otp", arguments: phoneNum);
         },
         codeAutoRetrievalTimeout: (verificationId) {
           this.verifyId.value = verificationId;
@@ -40,7 +41,7 @@ class FirebaseAllServices extends GetxController {
       );
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
-        "Error",
+        "तसदीबद्दल क्षमस्व",
         e.message!,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
@@ -52,8 +53,8 @@ class FirebaseAllServices extends GetxController {
       );
     } catch (e) {
       Get.snackbar(
-        "Error",
-        "OTP Failed",
+        "तसदीबद्दल क्षमस्व",
+        "ओटीपी तपासून पहा!",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         isDismissible: true,
@@ -73,7 +74,7 @@ class FirebaseAllServices extends GetxController {
       return credentials.user != null ? true : false;
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
-        "Error",
+        "तसदीबद्दल क्षमस्व",
         e.message!,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
@@ -92,7 +93,7 @@ class FirebaseAllServices extends GetxController {
       await _auth.signOut();
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
-        "Error",
+        "तसदीबद्दल क्षमस्व",
         e.message!,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
@@ -110,7 +111,7 @@ class FirebaseAllServices extends GetxController {
       await _auth.currentUser!.delete();
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
-        "Error",
+        "तसदीबद्दल क्षमस्व",
         e.message!,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
@@ -132,30 +133,24 @@ class FirebaseAllServices extends GetxController {
       String internalCrop,
       String irrigationType,
       String irrigationSource,
-      String district,
-      String taluka,
-      String village) async {
+      String seletedFertilizerType) async {
     final user = _auth.currentUser!;
     final id = user.uid;
-    final phoneNo = user.phoneNumber;
-    await FirebaseFirestore.instance.collection("Users").doc(id).set(
+    await db.collection("New Users").doc(id).set(
       {
-        "ID": id,
-        "Phone Number": phoneNo,
         "Acre": acre,
         "Guntha": guntha,
         "Main Crop": mainCrop,
         "Internal Crop": internalCrop,
         "Irrigation Type": irrigationType,
         "Irrigation Source": irrigationSource,
-        "District": district,
-        "Taluka": taluka,
-        "Village": village,
+        "Fertilizer Type": seletedFertilizerType,
       },
+      SetOptions(merge: true),
     ).then((value) {
       Get.snackbar(
-        "Sucess",
-        "Data Uploaded Successfully!",
+        "धन्यवाद",
+        "माहिती यशस्वीरित्या जतन केली आहे!",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
         isDismissible: true,
@@ -169,7 +164,7 @@ class FirebaseAllServices extends GetxController {
       });
     }).onError((error, stackTrace) {
       Get.snackbar(
-        "Error",
+        "तसदीबद्दल क्षमस्व",
         error.toString(),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
@@ -182,5 +177,182 @@ class FirebaseAllServices extends GetxController {
     });
   }
 
-  proceedNext() {}
+  Future<void> addLocationdata(String district, String taluka, String village,
+      String nextPage, var userDetailsMap) async {
+    final user = _auth.currentUser!;
+    final id = user.uid;
+    final phoneNo = user.phoneNumber;
+    await db.collection("New Users").doc(id).set(
+      {
+        "ID": id,
+        "Phone Number": phoneNo,
+        "District": district,
+        "Taluka": taluka,
+        "Village": village,
+        "State":"महाराष्ट्र",
+      },
+      SetOptions(merge: true),
+    ).then((value) {
+      Get.snackbar(
+        "धन्यवाद",
+        "माहिती यशस्वीरित्या जतन केली आहे!",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        margin: EdgeInsets.all(15),
+        forwardAnimationCurve: Curves.easeOutBack,
+        colorText: Colors.white,
+      );
+      Future.delayed(const Duration(seconds: 5), () {
+        Get.toNamed(nextPage,arguments: userDetailsMap);
+      });
+    }).onError((error, stackTrace) {
+      Get.snackbar(
+        "तसदीबद्दल क्षमस्व",
+        error.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        margin: EdgeInsets.all(15),
+        forwardAnimationCurve: Curves.easeOutBack,
+        colorText: Colors.white,
+      );
+    });
+  }
+
+
+  Future<void> addFarmingServices(
+      String service,
+      String serviceType,
+      String serviceStartDate,
+      num serviceStartDateInMs,
+      String serviceEndDate,
+      num serviceEndDateInMs,
+      String serviceLevel,
+      String dist,
+      String tal,
+      String vil,var userDetails) async {
+    final user = _auth.currentUser!;
+    final id = user.uid;
+    final phoneNo = user.phoneNumber;
+    await db
+        .collection("Farming Services")
+        .doc(id)
+        .collection(service + serviceType)
+        .doc(id)
+        .set(
+      {
+        "ID": id,
+        "Phone Number": phoneNo,
+        "District": dist,
+        "Taluka": tal,
+        "Village": vil,
+        "Service": service,
+        "Service Type": serviceType,
+        "Start Date": serviceStartDate,
+        "Start Date ms": serviceStartDateInMs,
+        "End Date": serviceEndDate,
+        "End Date ms": serviceEndDateInMs,
+        "Service Level": serviceLevel,
+        "State":"महाराष्ट्र",
+      },
+    ).then((value) {
+      Get.snackbar(
+        "धन्यवाद",
+        "माहिती यशस्वीरित्या जतन केली आहे!",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        margin: EdgeInsets.all(15),
+        forwardAnimationCurve: Curves.easeOutBack,
+        colorText: Colors.white,
+      );
+      Future.delayed(const Duration(seconds: 5), () {
+        Get.offNamed("/buyFarmingServices",arguments: userDetails);
+      });
+    }).onError((error, stackTrace) {
+      Get.snackbar(
+        "तसदीबद्दल क्षमस्व",
+        error.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        margin: EdgeInsets.all(15),
+        forwardAnimationCurve: Curves.easeOutBack,
+        colorText: Colors.white,
+      );
+    });
+  }
+
+
+  Future<void> addSellProducts(
+      String mainType,
+      String subType,
+      String sellStartDate,
+      num sellStartDateInMs,
+      String sellEndDate,
+      num sellEndDateInMs,
+      String sellLevel,
+      String dist,
+      String tal,
+      String vil,var userDetails) async {
+    final user = _auth.currentUser!;
+    final id = user.uid;
+    final phoneNo = user.phoneNumber;
+    await db
+        .collection("Products")
+        .doc(id)
+        .collection(mainType + subType)
+        .doc(id)
+        .set(
+      {
+        "ID": id,
+        "Phone Number": phoneNo,
+        "District": dist,
+        "Taluka": tal,
+        "Village": vil,
+        "Main Type": mainType,
+        "Sub Type": subType,
+        "Start Date": sellStartDate,
+        "Start Date ms": sellStartDateInMs,
+        "End Date": sellEndDate,
+        "End Date ms": sellEndDateInMs,
+        "Sell Level": sellLevel,
+        "State":"महाराष्ट्र",
+      },
+    ).then((value) {
+      Get.snackbar(
+        "धन्यवाद",
+        "माहिती यशस्वीरित्या जतन केली आहे!",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        margin: EdgeInsets.all(15),
+        forwardAnimationCurve: Curves.easeOutBack,
+        colorText: Colors.white,
+      );
+      Future.delayed(const Duration(seconds: 5), () {
+        Get.offNamed("/buyFarmingServices",arguments: userDetails);
+      });
+    }).onError((error, stackTrace) {
+      Get.snackbar(
+        "तसदीबद्दल क्षमस्व",
+        error.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        margin: EdgeInsets.all(15),
+        forwardAnimationCurve: Curves.easeOutBack,
+        colorText: Colors.white,
+      );
+    });
+  }
+
+
 }

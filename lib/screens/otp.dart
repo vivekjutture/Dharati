@@ -17,6 +17,8 @@ class _OTPVerificationState extends State<OTPVerification> {
 
   @override
   Widget build(BuildContext context) {
+    String completeNumber =
+        ModalRoute.of(context)!.settings.arguments.toString();
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -39,7 +41,8 @@ class _OTPVerificationState extends State<OTPVerification> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/Agriculture.jpg',
+              Image.asset(
+                'assets/Agriculture.jpg',
                 width: 200,
                 height: 200,
               ),
@@ -47,7 +50,7 @@ class _OTPVerificationState extends State<OTPVerification> {
                 height: 5,
               ),
               Text(
-                'Phone Verification',
+                'संपर्क क्रमांक पडताळणी',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -58,7 +61,7 @@ class _OTPVerificationState extends State<OTPVerification> {
                 height: 10,
               ),
               Text(
-                'Enter OTP sent to ${PhoneNum.completeNumber}',
+                'या $completeNumber संपर्क क्रमांकाला पाठवलेला ओटीपी टाका',
                 style: TextStyle(
                   color: Colors.black54,
                   fontSize: 18,
@@ -97,26 +100,14 @@ class _OTPVerificationState extends State<OTPVerification> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (otp.length == 6) {
-                      /*try {
-                        PhoneAuthCredential credential =
-                            PhoneAuthProvider.credential(
-                                verificationId: PhoneNum.verifyId,
-                                smsCode: otp);
-                        await FirebaseAuth.instance
-                            .signInWithCredential(credential);
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, "userdetails", (route) => false);
-                      } on FirebaseAuthException catch (e) {
-                        showSnackBar(context, e.message!);
-                      }*/
                       var isVerified =
                           await FirebaseAllServices.instance.verifyOTP(otp);
                       if (isVerified) {
-                        Get.offNamedUntil("/userdetails", (route) => false);
+                        Get.offNamedUntil("/chooseService", (route) => false);
                       } else {
                         Get.snackbar(
-                          "Error",
-                          "OTP Failed!",
+                          "तसदीबद्दल क्षमस्व",
+                          "ओटीपी तपासून पहा!",
                           snackPosition: SnackPosition.BOTTOM,
                           backgroundColor: Colors.red,
                           isDismissible: true,
@@ -128,8 +119,8 @@ class _OTPVerificationState extends State<OTPVerification> {
                       }
                     } else {
                       Get.snackbar(
-                        "Error",
-                        "Invalid OTP",
+                        "तसदीबद्दल क्षमस्व",
+                        "ओटीपी तपासून पहा!",
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: Colors.red,
                         isDismissible: true,
@@ -141,7 +132,7 @@ class _OTPVerificationState extends State<OTPVerification> {
                     }
                   },
                   child: Text(
-                    'Verify',
+                    'सत्यापित करा',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 19,
@@ -161,7 +152,7 @@ class _OTPVerificationState extends State<OTPVerification> {
                   onPressed: () {
                     Get.offNamedUntil("/phone", (route) => false);
                   },
-                  child: Text('Another number?')),
+                  child: Text('वेगळा संपर्क क्रमांक?')),
             ],
           ),
         ),

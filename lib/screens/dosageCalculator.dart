@@ -77,13 +77,13 @@ class _DosageCalculationState extends State<DosageCalculation> {
     "40"
   ];
 
-  final crops = ["Sugarcane"];
+  final crops = ["ऊस"];
 
-  final doseType = ["Clear", "10:26:26", "DAP"];
+  final doseType = ["Clear", "10:26:26", "डीएपी"];
 
   String? selectedGuntha = "0";
 
-  String? selectedCrop = "Sugarcane";
+  String? selectedCrop = "ऊस";
 
   String? selectedDoseType = "Clear";
 
@@ -104,8 +104,8 @@ class _DosageCalculationState extends State<DosageCalculation> {
 
   @override
   void initState() {
-    clearAll();
     super.initState();
+    clearAll();
   }
 
   @override
@@ -115,7 +115,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          "Dosage Calculator",
+          "डोस पद्धती",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
@@ -149,7 +149,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
                 children: [
                   Expanded(
                     child: Text(
-                      "Area",
+                      "क्षेत्र",
                       style: labelTextStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -159,7 +159,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
                     child: Expanded(
                       child: DropdownButtonFormField(
                         decoration: InputDecoration(
-                          labelText: "Guntha",
+                          labelText: "गुंठा",
                           labelStyle: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
@@ -176,9 +176,11 @@ class _DosageCalculationState extends State<DosageCalculation> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                         menuMaxHeight: 250,
+                        isExpanded: true,
+                        isDense: true,
                         value: selectedGuntha,
                         validator: (value) =>
-                            value == "0" ? "Please Select Guntha" : null,
+                            value == "0" ? "कृपया गुंठा निवडा" : null,
                         items: _gunthas
                             .map((e) => DropdownMenuItem(
                                   child: Text(e),
@@ -206,7 +208,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
                 children: [
                   Expanded(
                     child: Text(
-                      "Crop",
+                      "पीक",
                       style: labelTextStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -227,9 +229,11 @@ class _DosageCalculationState extends State<DosageCalculation> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                         menuMaxHeight: 250,
+                        isExpanded: true,
+                        isDense: true,
                         value: selectedCrop,
                         validator: (value) =>
-                            value == null ? "Please Select Crop" : null,
+                            value == null ? "कृपया पीक निवडा" : null,
                         items: crops
                             .map((e) => DropdownMenuItem(
                                   child: Text(e),
@@ -255,7 +259,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
                 children: [
                   Expanded(
                     child: Text(
-                      "Dose Type",
+                      "डोस प्रकार",
                       style: labelTextStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -276,9 +280,11 @@ class _DosageCalculationState extends State<DosageCalculation> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                         menuMaxHeight: 250,
+                        isExpanded: true,
+                        isDense: true,
                         value: selectedDoseType,
                         validator: (value) =>
-                            value == null ? "Please Select Dose Type" : null,
+                            value == null ? "कृपया डोस प्रकार निवडा" : null,
                         items: doseType
                             .map((e) => DropdownMenuItem(
                                   child: Text(e),
@@ -298,14 +304,14 @@ class _DosageCalculationState extends State<DosageCalculation> {
                 ],
               ),
               SizedBox(
-                height: 10,
+                height: 20,
               ),
               Divider(
                 thickness: 3,
                 color: Colors.green.shade700,
               ),
               SizedBox(
-                height: 10,
+                height: 20,
               ),
               Container(
                 padding: EdgeInsets.all(20),
@@ -313,86 +319,336 @@ class _DosageCalculationState extends State<DosageCalculation> {
                   border: Border.all(color: Colors.green.shade700, width: 3),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: SingleChildScrollView(
-                  child: FittedBox(
-                    child: DataTable(
-                      dataRowHeight: 80,
-                      columns: [
-                        DataColumn(
-                          label:
-                              Text("Fertilizer", style: tableColumnTextStyle),
-                        ),
-                        DataColumn(
-                            label: Text(
-                                selectedDoseType == null
-                                    ? "-"
-                                    : selectedDoseType.toString() + " (K.G.)",
-                                style: tableColumnTextStyle),
-                            numeric: true),
-                      ],
-                      rows: [
-                        DataRow(cells: [
-                          DataCell(Text("Urea", style: tableDataHeadTextStyle)),
-                          DataCell(Text(urea, style: tableDataTextStyle)),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(Text("SSP\n(Super Single Phosphate)",
-                              style: tableDataHeadTextStyle)),
-                          DataCell(Text(ssp, style: tableDataTextStyle)),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(Text("MOP (Potash)",
-                              style: tableDataHeadTextStyle)),
-                          DataCell(Text(mop, style: tableDataTextStyle)),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(
-                              Text("10:26:26", style: tableDataHeadTextStyle)),
-                          DataCell(Text(npk, style: tableDataTextStyle)),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(Text("DAP", style: tableDataHeadTextStyle)),
-                          DataCell(Text(dap, style: tableDataTextStyle)),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(Text("Magnessium",
-                              style: tableDataHeadTextStyle)),
-                          DataCell(Text(magnessium, style: tableDataTextStyle)),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(
-                              Text("Silicon", style: tableDataHeadTextStyle)),
-                          DataCell(Text(silicon, style: tableDataTextStyle)),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(
-                              Text("Sulphur", style: tableDataHeadTextStyle)),
-                          DataCell(Text(sulphur, style: tableDataTextStyle)),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(Text("Calcium / \nCalcium Nitrate",
-                              style: tableDataHeadTextStyle)),
-                          DataCell(Text(calcium, style: tableDataTextStyle)),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(Text("Micro Nutrient",
-                              style: tableDataHeadTextStyle)),
-                          DataCell(
-                              Text(microNeutrient, style: tableDataTextStyle)),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(
-                              Text("Humic", style: tableDataHeadTextStyle)),
-                          DataCell(Text(humic, style: tableDataTextStyle)),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(Text("Organic / Nimboli",
-                              style: tableDataHeadTextStyle)),
-                          DataCell(Text(nimboli, style: tableDataTextStyle)),
-                        ]),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                            child: Text(
+                          "खत",
+                          style: tableColumnTextStyle,
+                          textAlign: TextAlign.center,
+                        )),
+                        Expanded(
+                            child: Text(
+                          selectedDoseType == null
+                              ? "-"
+                              : selectedDoseType.toString() + " (किलो)",
+                          style: tableColumnTextStyle,
+                          textAlign: TextAlign.center,
+                        )),
                       ],
                     ),
-                  ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "युरिया",
+                            style: tableDataHeadTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                            child: Text(
+                          urea,
+                          style: tableDataTextStyle,
+                          textAlign: TextAlign.center,
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "SSP\n(सुपर सिंगल फॉस्फेट)",
+                            style: tableDataHeadTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                            child: Text(
+                          ssp,
+                          style: tableDataTextStyle,
+                          textAlign: TextAlign.center,
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "MOP (पोटॅश)",
+                            style: tableDataHeadTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                            child: Text(
+                          mop,
+                          style: tableDataTextStyle,
+                          textAlign: TextAlign.center,
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "10:26:26",
+                            style: tableDataHeadTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                            child: Text(
+                          npk,
+                          style: tableDataTextStyle,
+                          textAlign: TextAlign.center,
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "डीएपी",
+                            style: tableDataHeadTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                            child: Text(
+                          dap,
+                          style: tableDataTextStyle,
+                          textAlign: TextAlign.center,
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "मॅग्नेशियम",
+                            style: tableDataHeadTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                            child: Text(
+                          magnessium,
+                          style: tableDataTextStyle,
+                          textAlign: TextAlign.center,
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "सिलिकॉन",
+                            style: tableDataHeadTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                            child: Text(
+                          silicon,
+                          style: tableDataTextStyle,
+                          textAlign: TextAlign.center,
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "गंधक",
+                            style: tableDataHeadTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                            child: Text(
+                          sulphur,
+                          style: tableDataTextStyle,
+                          textAlign: TextAlign.center,
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "कॅल्शियम / \nकॅल्शियम नायट्रेट",
+                            style: tableDataHeadTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                            child: Text(
+                          calcium,
+                          style: tableDataTextStyle,
+                          textAlign: TextAlign.center,
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "सूक्ष्म अन्नद्रव्ये",
+                            style: tableDataHeadTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                            child: Text(
+                          microNeutrient,
+                          style: tableDataTextStyle,
+                          textAlign: TextAlign.center,
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "ह्युमिक",
+                            style: tableDataHeadTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                            child: Text(
+                          humic,
+                          style: tableDataTextStyle,
+                          textAlign: TextAlign.center,
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "सेंद्रिय / निंबोळी",
+                            style: tableDataHeadTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                            child: Text(
+                          nimboli,
+                          style: tableDataTextStyle,
+                          textAlign: TextAlign.center,
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -475,7 +731,7 @@ class _DosageCalculationState extends State<DosageCalculation> {
       clearFertilizers();
     } else if (doseType == "10:26:26") {
       npkFertilizers();
-    } else if (doseType == "DAP") {
+    } else if (doseType == "डीएपी") {
       dapFertilizers();
     }
     clearAll();
